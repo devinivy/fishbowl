@@ -1,0 +1,60 @@
+version: '3.4'
+services:
+    web_base: &web_base
+        build:
+            context: .
+            dockerfile: server/Dockerfile
+            target: development
+        command: [
+            "./node_modules/.bin/nodemon",
+            "--watch",
+            "lib/**/*",
+            "--watch",
+            "server/**/*",
+            "server/index.js"
+        ]
+        environment:
+            - NODE_ENV=development
+            - DB_HOST=db
+            - "DB_NAME=${POSTGRES_DB}"
+            - "DB_USER=${POSTGRES_USER}"
+            - "DB_PASSWORD=${POSTGRES_PASSWORD}"
+        ports:
+            - 3000:3000
+        depends_on:
+            - db
+    web:
+        # hack for docker-compose v3 dropping `extends` support
+        << : *web_base
+        # allows for hot-reloading of server
+        volumes:
+            - ./lib:/app/lib
+            - ./server:/app/server
+            - ./test:/app/test
+            - ./package.json:/app/package.json
+    test_base: &test_base
+        build:
+            context: .
+            dockerfile: server/Dockerfile
+            target: test
+    test:
+        # hack for docker-compose v3 dropping `extends` support
+        << : *test_base
+        # allows for hot-reloading of server
+        volumes:
+            - ./lib:/app/lib
+            - ./server:/app/server
+            - ./test:/app/test
+            - ./package.json:/app/package.json
+        depends_on:
+            - db
+    db:
+        image: "postgres:11"
+        environment:
+            - "POSTGRES_DB=${POSTGRES_DB}"
+            - "POSTGRES_USER=${POSTGRES_USER}"
+            - "POSTGRES_PASSWORD=${POSTGRES_PASSWORD}"
+        ports:
+            - "5432:5432"
+        volumes:
+            - ~/docker/volumes/postgres11:/var/lib/postgresql/data
