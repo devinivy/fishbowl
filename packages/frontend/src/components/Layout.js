@@ -35,17 +35,10 @@ module.exports.propTypes = {
 
 internals.Container = Styled.div`
     display: flex;
-    padding-top:10px;
-
-    // Alternatively,the Toolbar component in <Header /> could be given
-    // a disableGutters prop, and the left/right padding could be applied
-    // to the entire AppContainer.
-    padding-left: ${(props) => props.theme.spacing(2)}px;
-    padding-right: ${(props) => props.theme.spacing(2)}px;
     flex: 1;
-    @media (min-width: ${(props) => props.theme.breakpoints.values.sm}px) {
-        padding-left: ${(props) => props.theme.spacing(3)}px;
-        padding-right: ${(props) => props.theme.spacing(3)}px;
+    @media (min-width: ${({ theme }) => theme.breakpoints.values.sm}px) {
+        padding-left: ${({ theme }) => theme.spacing(3)}px;
+        padding-right: ${({ theme }) => theme.spacing(3)}px;
     }
 `;
 

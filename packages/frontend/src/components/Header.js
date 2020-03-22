@@ -15,9 +15,14 @@ module.exports = () => {
     return (
         <AppBar position='static'>
             <Toolbar>
-                <SiteTitle>Strangeluv</SiteTitle>
+                <SiteTitle>
+                    <NavLink exact to='/'>
+                        <span role='img' aria-label='droplets'>💦</span>
+                        {' '}Fishbowl{' '}
+                        <span role='img' aria-label='fish'>🐟</span>
+                    </NavLink>
+                </SiteTitle>
                 <Link exact to='/'>Home</Link>
-                <Link to='/counter'>Counter</Link>
             </Toolbar>
         </AppBar>
     );
@@ -32,4 +37,10 @@ internals.Link = Styled(Button).attrs({ component: NavLink, color: 'inherit' })`
 
 internals.SiteTitle = Styled(Typography).attrs({ variant: 'h6' })`
     flex-grow: 1;
+    a {
+        text-decoration: none;
+        :visited {
+            color: unset;
+        }
+    }
 `;
