@@ -6,9 +6,9 @@ module.exports = function HomePageContainer() {
     return (
         <HomePage
             games={[
-                { id: 1, name: 'sattydat night', status: 'initialized', players: ['harper', 'hannah', 'devin', 'ashton'] },
-                { id: 2, name: 'thursday', status: 'in-progress', players: ['harper', 'ashton', 'devin'] },
-                { id: 3, name: 'tuesday night', status: 'finished', players: ['harper', 'devin', 'ashton'] }
+                { id: 1, status: 'initialized', players: ['harper', 'hannah', 'devin', 'ashton'], createdAt: new Date() },
+                { id: 2, status: 'in-progress', players: ['harper', 'ashton', 'devin'], createdAt: new Date(Date.now() - 1000000) },
+                { id: 3, status: 'finished', players: ['harper', 'devin', 'ashton'], createdAt: new Date(Date.now() - 100000000) }
             ]}
         />
     );

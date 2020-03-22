@@ -15,6 +15,7 @@ const { default: FinishedIcon } = require('@material-ui/icons/Done');
 const { default: AddIcon } = require('@material-ui/icons/Add');
 const { default: Amber } = require('@material-ui/core/colors/amber');
 const { default: LightGreen } = require('@material-ui/core/colors/lightGreen');
+const { default: FormatRelative } = require('date-fns/formatRelative');
 const Link = require('../../../components/Link');
 const Types = require('../../../components/types');
 
@@ -22,7 +23,8 @@ const internals = {};
 
 module.exports = function HomePage({ games }) {
 
-    const { StatusAvatar, CornerFab } = internals;
+    const { StatusAvatar, CornerFab, statusInfo } = internals;
+    const now = new Date();
 
     return (
         <Box
@@ -36,19 +38,17 @@ module.exports = function HomePage({ games }) {
                 <Typography variant='h5'>Games</Typography>
             </Box>
             <List>
-                {games.map(({ id, name, status, players }) => {
+                {games.map(({ id, status, players, createdAt }) => {
 
                     return (
                         <ListItem key={id} button component={Link} to={`/game/${id}`}>
-                            <ListItemAvatar>
+                            <ListItemAvatar title={statusInfo[status].description}>
                                 <StatusAvatar status={status}>
-                                    {status === 'initialized' && <InitializedIcon />}
-                                    {status === 'in-progress' && <InProgressIcon />}
-                                    {status === 'finished' && <FinishedIcon />}
+                                    {statusInfo[status].icon}
                                 </StatusAvatar>
                             </ListItemAvatar>
                             <ListItemText
-                                primary={name}
+                                primary={FormatRelative(createdAt, now).toLowerCase()}
                                 secondary={players.join(', ')}
                             />
                         </ListItem>
@@ -66,18 +66,30 @@ module.exports.propTypes = {
     games: T.arrayOf(Types.game).isRequired
 };
 
+internals.statusInfo = {
+    initialized: {
+        icon: <InitializedIcon />,
+        description: 'Starting Soon',
+        color: LightGreen[500]
+    },
+    'in-progress': {
+        icon: <InProgressIcon />,
+        description: 'In Progress',
+        color: Amber[500]
+    },
+    finished: {
+        icon: <FinishedIcon />,
+        description: 'Ended',
+        color: ''
+    }
+};
+
 internals.StatusAvatar = Styled(Avatar)`
     ${({ status }) => {
 
-        if (status === 'in-progress') {
+        if (internals.statusInfo[status].color) {
             return css`
-                background-color: ${Amber[500]};
-            `;
-        }
-
-        if (status === 'initialized') {
-            return css`
-                background-color: ${LightGreen[500]};
+                background-color: ${internals.statusInfo[status].color};
             `;
         }
     }}
@@ -85,6 +97,6 @@ internals.StatusAvatar = Styled(Avatar)`
 
 internals.CornerFab = Styled(Fab)`
     position: absolute;
-    bottom: ${({ theme }) => theme.spacing(2)}px;
-    right: ${({ theme }) => theme.spacing(2)}px;
+    bottom: ${({ theme }) => theme.spacing(3)}px;
+    right: ${({ theme }) => theme.spacing(3)}px;
 `;

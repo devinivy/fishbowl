@@ -28,6 +28,7 @@
     "@material-ui/icons": "^4.9.1",
     "@material-ui/styles": "^4.9.0",
     "connected-react-router": "^6.6.1",
+    "date-fns": "^2.11.0",
     "history": "^4.10.1",
     "immer": "^6.0.2",
     "normalizr": "^3.5.0",
