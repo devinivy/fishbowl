@@ -11,6 +11,19 @@ exports.game.examples = [
     {
         id: 1,
         status: 'initialized',
+        me: null,
+        players: [
+            { nickname: 'harper', status: 'ready' },
+            { nickname: 'hannah', status: 'not-ready' },
+            { nickname: 'devin', status: 'ready' },
+            { nickname: 'ashton', status: 'ready' }
+        ],
+        createdAt: new Date()
+    },
+    {
+        id: 10,
+        status: 'initialized',
+        me: { nickname: 'devin', status: 'ready' },
         players: [
             { nickname: 'harper', status: 'ready' },
             { nickname: 'hannah', status: 'not-ready' },
@@ -22,6 +35,7 @@ exports.game.examples = [
     {
         id: 2,
         status: 'in-progress',
+        me: null,
         players: [
             { nickname: 'harper', status: 'ready' },
             { nickname: 'ashton', status: 'ready' },
@@ -32,6 +46,7 @@ exports.game.examples = [
     {
         id: 3,
         status: 'finished',
+        me: null,
         players: [
             { nickname: 'harper', status: 'ready' },
             { nickname: 'devin', status: 'ready' },
