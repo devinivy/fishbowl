@@ -33,6 +33,18 @@ exports.game.examples = [
         createdAt: new Date()
     },
     {
+        id: 10,
+        status: 'initialized',
+        me: { nickname: 'devin', status: 'ready' },
+        players: [
+            { nickname: 'harper', status: 'ready' },
+            { nickname: 'hannah', status: 'ready' },
+            { nickname: 'devin', status: 'ready' },
+            { nickname: 'ashton', status: 'ready' }
+        ],
+        createdAt: new Date()
+    },
+    {
         id: 2,
         status: 'in-progress',
         me: null,

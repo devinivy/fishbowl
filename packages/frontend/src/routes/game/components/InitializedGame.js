@@ -13,6 +13,8 @@ module.exports = function InitializedGame({ game }) {
 
     const { GreenButton } = internals;
 
+    const allPlayersReady = game.players.every(({ status }) => status === 'ready');
+
     return (
         <Box width='100%'>
             <Box
@@ -36,7 +38,16 @@ module.exports = function InitializedGame({ game }) {
                     flexShrink={1}
                     borderRadius={{ xs: 0, sm: 'borderRadius' }}
                 >
-                    {game.me && <GreenButton fullWidth variant='contained'>begin</GreenButton>}
+                    {game.me && (
+                        <GreenButton
+                            fullWidth
+                            disabled={!allPlayersReady}
+                            title={!allPlayersReady && 'not all players are ready'}
+                            variant='contained'
+                        >
+                            begin
+                        </GreenButton>
+                    )}
                     {!game.me && (
                         <>
                             <Box mr={2}>
