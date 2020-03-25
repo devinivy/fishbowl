@@ -65,6 +65,7 @@ module.exports.propTypes = {
 
 internals.FieldWrapper = Styled(Box)`
     margin-bottom: ${({ theme }) => theme.spacing(1)}px;
+    margin-right: -${({ theme }) => theme.spacing(1)}px;
     > * {
         padding-right: ${({ theme }) => theme.spacing(1)}px;
         min-width: 120px;
