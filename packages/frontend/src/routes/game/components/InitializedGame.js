@@ -15,6 +15,7 @@ const { default: LightGreen } = require('@material-ui/core/colors/lightGreen');
 const GameListItem = require('../../../components/GameListItem');
 const SubmitWordsForm = require('../../../components/SubmitWordsForm');
 const Types = require('../../../components/types');
+const GameSection = require('./GameSection');
 
 const internals = {};
 
@@ -41,7 +42,7 @@ module.exports = function InitializedGame({ game }) {
                 <Box flexGrow={2}>
                     <GameListItem component='div' game={game} />
                 </Box>
-                {game.me || showJoin && (
+                {(game.me || showJoin) && (
                     <Box
                         display='flex'
                         position='relative'
@@ -90,14 +91,10 @@ module.exports = function InitializedGame({ game }) {
                 <Divider />
             </Box>
             {game.me && game.me.status === 'not-ready' && (
-                <Box m={{ xs: 1, sm: 0 }}>
-                    <Paper variant={smUp ? 'outlined' : 'elevation'} elevation={1} square={!smUp}>
-                        <Box p={2}>
-                            <Typography variant='subtitle2'>Please pick five words to submit to the fishbowl.</Typography>
-                            <SubmitWordsForm onSubmit={(x) => console.log(x)} />
-                        </Box>
-                    </Paper>
-                </Box>
+                <GameSection>
+                    <Typography variant='subtitle2'>Please pick five words to submit to the fishbowl.</Typography>
+                    <SubmitWordsForm onSubmit={(x) => console.log(x)} />
+                </GameSection>
             )}
         </Box>
     );
@@ -111,6 +108,9 @@ internals.GreenButton = Styled(Button)`
     background-color: ${LightGreen[500]};
     :hover {
         background-color: ${LightGreen[500]};
+    }
+    @media (max-width: 375px) {
+        margin-top: -${({ theme }) => theme.spacing(1)}px;
     }
 `;
 
