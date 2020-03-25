@@ -7,7 +7,6 @@ const { default: Box } = require('@material-ui/core/Box');
 const { default: Button } = require('@material-ui/core/Button');
 const { default: TextField } = require('@material-ui/core/TextField');
 const { default: Divider } = require('@material-ui/core/Divider');
-const { default: Paper } = require('@material-ui/core/Paper');
 const { default: Typography } = require('@material-ui/core/Typography');
 const { default: IconButton } = require('@material-ui/core/IconButton');
 const { default: CloseIcon } = require('@material-ui/icons/Cancel');
@@ -16,6 +15,7 @@ const GameListItem = require('../../../components/GameListItem');
 const SubmitWordsForm = require('../../../components/SubmitWordsForm');
 const Types = require('../../../components/types');
 const GameSection = require('./GameSection');
+const TeamList = require('./TeamList');
 
 const internals = {};
 
@@ -90,6 +90,9 @@ module.exports = function InitializedGame({ game }) {
             <Box mb={{ sm: 2 }}>
                 <Divider />
             </Box>
+            <GameSection>
+                <TeamList players={game.players} me={game.me} />
+            </GameSection>
             {game.me && game.me.status === 'not-ready' && (
                 <GameSection>
                     <Typography variant='subtitle2'>Please pick five words to submit to the fishbowl.</Typography>

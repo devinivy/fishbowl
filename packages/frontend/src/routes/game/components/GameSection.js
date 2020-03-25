@@ -11,7 +11,7 @@ module.exports = function GameSection({ children, ...others }) {
     const smUp = useMediaQuery(theme.breakpoints.up('sm'));
 
     return (
-        <Box m={{ xs: 1, sm: 0 }} {...others}>
+        <Box mx={{ xs: 1, sm: 0 }} my={{ xs: 1, sm: 2 }} {...others}>
             <Paper variant={smUp ? 'outlined' : 'elevation'} elevation={1} square={!smUp}>
                 <Box p={2}>
                     {children}
