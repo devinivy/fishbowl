@@ -1,7 +1,6 @@
 const React = require('react');
 const { useState, useCallback } = require('react');
 const { useTheme } = require('@material-ui/core/styles');
-const { default: useMediaQuery } = require('@material-ui/core/useMediaQuery');
 const { default: Styled } = require('styled-components');
 const { default: Box } = require('@material-ui/core/Box');
 const { default: Button } = require('@material-ui/core/Button');
@@ -22,8 +21,6 @@ const internals = {};
 module.exports = function InitializedGame({ game }) {
 
     const theme = useTheme();
-    const smUp = useMediaQuery(theme.breakpoints.up('sm'));
-
     const [showJoin, setShowJoin] = useState(true);
     const handleCloseJoin = useCallback(() => setShowJoin(false), []);
 
