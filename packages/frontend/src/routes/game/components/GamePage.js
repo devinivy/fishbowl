@@ -6,7 +6,7 @@ module.exports = function GamePage() {
 
     return (
         <InitializedGame
-            game={Types.game.examples[2]}
+            game={Types.game.examples[3]}
         />
     );
 };

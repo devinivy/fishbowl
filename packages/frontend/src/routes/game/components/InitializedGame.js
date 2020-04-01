@@ -10,11 +10,14 @@ const { default: Typography } = require('@material-ui/core/Typography');
 const { default: IconButton } = require('@material-ui/core/IconButton');
 const { default: CloseIcon } = require('@material-ui/icons/Cancel');
 const { default: LightGreen } = require('@material-ui/core/colors/lightGreen');
+const { default: Teal } = require('@material-ui/core/colors/teal');
+const { default: Red } = require('@material-ui/core/colors/red');
 const GameListItem = require('../../../components/GameListItem');
 const SubmitWordsForm = require('../../../components/SubmitWordsForm');
 const Types = require('../../../components/types');
 const GameSection = require('./GameSection');
 const TeamList = require('./TeamList');
+const TurnInfo = require('./TurnInfo');
 
 const internals = {};
 
@@ -87,6 +90,11 @@ module.exports = function InitializedGame({ game }) {
             <Box mb={{ sm: 2 }}>
                 <Divider />
             </Box>
+            {game.turn && (
+                <GameSection bgcolor={game.turn.player.team === 'a' ? Teal[50] : Red[50]}>
+                    <TurnInfo turn={game.turn} me={game.me} score={game.score} />
+                </GameSection>
+            )}
             <GameSection>
                 <TeamList players={game.players} me={game.me} />
             </GameSection>

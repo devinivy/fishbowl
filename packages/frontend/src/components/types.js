@@ -94,10 +94,13 @@ exports.game.examples = [
             { nickname: 'devin', status: 'ready', team: 'a' }
         ],
         turn: {
-            status: 'initialized', // or in-progress
-            go: 1,    // 0-indexed
-            round: 3, // 0-indexed
+            status: 'initialized',  // or in-progress
+            word: 'something',      // null when not your turn
+            lastWord: 'abraham lincoln',
+            go: 0,    // 0-indexed
+            round: 2, // 0-indexed
             player: { nickname: 'ashton', status: 'ready', team: 'b' },
+            lastPlayer: { nickname: 'harper', status: 'ready', team: 'a' },
             start: null,
             end: null
         },
@@ -107,9 +110,9 @@ exports.game.examples = [
                 b: [6, 3, 5]
             },
             player: {
-                harper: [4, 5, 4],
-                ashton: [6, 3, 5],
-                devin: [3, 4, 2]
+                harper: [[4], [5], [4]],
+                ashton: [[6], [3], [5]],
+                devin: [[3], [4], [2]]
             }
         }
     },
@@ -130,9 +133,9 @@ exports.game.examples = [
                 b: [3, 4, 2, 6]
             },
             player: {
-                harper: [4, 5, 4, 2],
-                devin: [3, 4, 2, 6],
-                ashton: [6, 3, 5, 4]
+                harper: [[4], [5], [4], [2]],
+                devin: [[3], [4], [2], [6]],
+                ashton: [[6], [3], [5], [4]]
             }
         }
     }
