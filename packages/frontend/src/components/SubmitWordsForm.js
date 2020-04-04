@@ -1,4 +1,5 @@
-const { useState, useCallback, ...React } = require('react');
+const React = require('react');
+const { useState, useCallback } = require('react');
 const T = require('prop-types');
 const { default: Styled } = require('styled-components');
 const { default: TextField } = require('@material-ui/core/TextField');

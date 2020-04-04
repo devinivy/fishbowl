@@ -3,8 +3,9 @@ const { useState } = require('react');
 const T = require('prop-types');
 // const { default: Styled } = require('styled-components');
 const { useTheme } = require('@material-ui/core/styles');
+const { default: useUpdate } = require('react-use/lib/useUpdate');
 const { default: useMediaQuery } = require('@material-ui/core/useMediaQuery');
-const DifferenceInSeconds = require('date-fns/differenceInSeconds');
+// const DifferenceInSeconds = require('date-fns/differenceInSeconds');
 const { default: Box } = require('@material-ui/core/Box');
 const { default: Typography } = require('@material-ui/core/Typography');
 const { default: ListItem } = require('@material-ui/core/ListItem');
@@ -15,17 +16,22 @@ const { default: Avatar } = require('@material-ui/core/Avatar');
 const { default: Grow } = require('@material-ui/core/Grow');
 const { default: CheckIcon } = require('@material-ui/icons/Check');
 const { default: StarsIcon } = require('@material-ui/icons/Stars');
-const ReactCountdownClock = require('react-countdown-clock');
 // const { default: Teal } = require('@material-ui/core/colors/teal');
 // const { default: Red } = require('@material-ui/core/colors/red');
 const PlayerListItem = require('./PlayerListItem');
+const ClockCountdown = require('../../../components/ClockCountdown');
+const SecondsCountdown = require('../../../components/SecondsCountdown');
+const { useFlasher } = require('../../../components/useFlasher');
 // const { Textfit } = require('react-textfit');
 
 const internals = {};
 
+const NBSP = '\xa0';
+
 module.exports = function TurnInfo({ turn, me, score, ...others }) {
 
     const theme = useTheme();
+    const update = useUpdate();
     const smUp = useMediaQuery(theme.breakpoints.up('sm'));
 
     const { getLastItem, flat, words } = internals;
@@ -42,8 +48,8 @@ module.exports = function TurnInfo({ turn, me, score, ...others }) {
     const winningScore = lastRoundTeamA > lastRoundTeamB ? lastRoundTeamA : lastRoundTeamB;
     const losingScore = lastRoundTeamA > lastRoundTeamB ? lastRoundTeamB : lastRoundTeamA;
     const now = new Date();
-    const started = now < start;
-
+    const started = now >= start;
+    const showLastWord = useFlasher(lastWord);
     const [isIn, setIsIn] = useState(false);
 
     return (
@@ -83,18 +89,20 @@ module.exports = function TurnInfo({ turn, me, score, ...others }) {
                 )}
                 {status === 'in-progress' && !started && (
                     <div>
-                        <Typography variant='h2'>{DifferenceInSeconds(start, now)}</Typography>
+                        <Typography variant='h2'>
+                            <SecondsCountdown ends={start} onEnd={update} />
+                        </Typography>
                     </div>
                 )}
                 {!isMe && status === 'in-progress' && started && (
                     <Box p={2}>
-                        <ReactCountdownClock
+                        <ClockCountdown
                             key={smUp}
-                            seconds={DifferenceInSeconds(end, start)}
+                            start={start}
+                            end={end}
                             size={smUp ? 200 : 150}
                             weight={smUp ? 15 : 10}
                             alpha={.8}
-                            font={theme.typography.fontFamily}
                         />
                     </Box>
                 )}
@@ -129,11 +137,11 @@ module.exports = function TurnInfo({ turn, me, score, ...others }) {
                         />
                     </ListItem>
                 )}
-                {!isMe && status === 'in-progress' && lastWord && (
-                    <Grow in={isIn}>
+                {!isMe && status === 'in-progress' && (
+                    <Grow in={showLastWord}>
                         <Box textAlign='center'>
                             <CheckIcon />
-                            <Typography>{lastWord}</Typography>
+                            <Typography>{lastWord || NBSP}</Typography>
                         </Box>
                     </Grow>
                 )}

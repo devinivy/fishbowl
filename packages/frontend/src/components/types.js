@@ -117,6 +117,39 @@ exports.game.examples = [
         }
     },
     {
+        id: 20,
+        status: 'in-progress',
+        me: null,
+        createdAt: new Date(Date.now() - 1000000),
+        players: [
+            { nickname: 'harper', status: 'ready', team: 'a' },
+            { nickname: 'ashton', status: 'ready', team: 'b' },
+            { nickname: 'devin', status: 'ready', team: 'a' }
+        ],
+        turn: {
+            status: 'in-progress',
+            word: null,      // null when not your turn
+            lastWord: 'bobby',
+            go: 0,    // 0-indexed
+            round: 2, // 0-indexed
+            player: { nickname: 'ashton', status: 'ready', team: 'b' },
+            lastPlayer: { nickname: 'harper', status: 'ready', team: 'a' },
+            start: new Date(Date.now() + 10000),
+            end: new Date(Date.now() + 40000)
+        },
+        score: {
+            team: {
+                a: [7, 9, 6],
+                b: [6, 3, 5]
+            },
+            player: {
+                harper: [[4], [5], [4]],
+                ashton: [[6], [3], [5]],
+                devin: [[3], [4], [2]]
+            }
+        }
+    },
+    {
         id: 3,
         status: 'finished',
         me: null,
