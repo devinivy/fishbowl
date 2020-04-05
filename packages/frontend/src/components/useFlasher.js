@@ -12,8 +12,12 @@ exports.useFlasher = function useFlasher(value, ms = 1000) {
         remove();
     }, ms);
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    useEffect(() => add(value), [value]);
+    useEffect(() => {
+
+        if (value) {
+            add(value);
+        }
+    }, [value]); // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(() => {
 

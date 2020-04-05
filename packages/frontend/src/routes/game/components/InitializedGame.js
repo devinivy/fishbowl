@@ -91,8 +91,10 @@ module.exports = function InitializedGame({ game }) {
                 <Divider />
             </Box>
             {game.turn && (
-                <GameSection bgcolor={game.turn.player.team === 'a' ? Teal[50] : Red[50]}>
-                    <TurnInfo turn={game.turn} me={game.me} score={game.score} />
+                <GameSection
+                    bgcolor={game.turn.player.team === 'a' ? Teal[50] : Red[50]}
+                >
+                    <TurnInfo minHeight={375} turn={game.turn} me={game.me} score={game.score} />
                 </GameSection>
             )}
             <GameSection>

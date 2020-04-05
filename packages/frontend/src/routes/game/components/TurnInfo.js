@@ -1,7 +1,6 @@
 const React = require('react');
-const { useState } = require('react');
 const T = require('prop-types');
-// const { default: Styled } = require('styled-components');
+const { default: Styled } = require('styled-components');
 const { useTheme } = require('@material-ui/core/styles');
 const { default: useUpdate } = require('react-use/lib/useUpdate');
 const { default: useMediaQuery } = require('@material-ui/core/useMediaQuery');
@@ -13,6 +12,7 @@ const { default: ListItemText } = require('@material-ui/core/ListItemText');
 const { default: ListItemAvatar } = require('@material-ui/core/ListItemAvatar');
 const { default: ListItemSecondaryAction } = require('@material-ui/core/ListItemSecondaryAction');
 const { default: Avatar } = require('@material-ui/core/Avatar');
+const { default: Button } = require('@material-ui/core/Button');
 const { default: Grow } = require('@material-ui/core/Grow');
 const { default: CheckIcon } = require('@material-ui/icons/Check');
 const { default: StarsIcon } = require('@material-ui/icons/Stars');
@@ -22,7 +22,7 @@ const PlayerListItem = require('./PlayerListItem');
 const ClockCountdown = require('../../../components/ClockCountdown');
 const SecondsCountdown = require('../../../components/SecondsCountdown');
 const { useFlasher } = require('../../../components/useFlasher');
-// const { Textfit } = require('react-textfit');
+const { Textfit } = require('react-textfit');
 
 const internals = {};
 
@@ -34,7 +34,7 @@ module.exports = function TurnInfo({ turn, me, score, ...others }) {
     const update = useUpdate();
     const smUp = useMediaQuery(theme.breakpoints.up('sm'));
 
-    const { getLastItem, flat, words } = internals;
+    const { ClockIconWrapper, getLastItem, flat, words } = internals;
     const { status, player, lastPlayer, word, lastWord, go, round, start, end } = turn;
 
     const isMe = Boolean(me && player.nickname === me.nickname);
@@ -50,7 +50,6 @@ module.exports = function TurnInfo({ turn, me, score, ...others }) {
     const now = new Date();
     const started = now >= start;
     const showLastWord = useFlasher(lastWord);
-    const [isIn, setIsIn] = useState(false);
 
     return (
         <Box display='flex' flexDirection='column' {...others}>
@@ -63,7 +62,6 @@ module.exports = function TurnInfo({ turn, me, score, ...others }) {
                     (isMe ? 'you\'re up!' :
                         (isMyTeam ? 'your team is up!' : 'the other team is up')
                     ) : null}
-                onClick={() => setIsIn((x) => !x)}
             >
                 <ListItemSecondaryAction>
                     {status === 'in-progress' && (
@@ -82,10 +80,10 @@ module.exports = function TurnInfo({ turn, me, score, ...others }) {
                     </div>
                 )}
                 {isMe && status === 'initialized' && (
-                    <div>
-                        {go === 0 && <Typography variant='subtitle1' color='textSecondary'>starting round {round + 1}</Typography>}
-                        TODO start button
-                    </div>
+                    <Box textAlign='center'>
+                        {go === 0 && <Typography variant='subtitle1' color='textSecondary' gutterBottom>starting round {round + 1}</Typography>}
+                        <Button size='small' variant='outlined' color='primary'>Ready</Button>
+                    </Box>
                 )}
                 {status === 'in-progress' && !started && (
                     <div>
@@ -107,10 +105,26 @@ module.exports = function TurnInfo({ turn, me, score, ...others }) {
                     </Box>
                 )}
                 {isMe && status === 'in-progress' && started && (
-                    <>TODO {word}</>
+                    <Grow key={word} in>
+                        <Box
+                            component={Textfit}
+                            pb={4}
+                            px={2}
+                            max={80}
+                            width='100%'
+                            lineHeight='100%'
+                            alignSelf='stretch'
+                            display='flex'
+                            justifyContent='center'
+                            alignItems='center'
+                            textAlign='center'
+                        >
+                            {word}
+                        </Box>
+                    </Grow>
                 )}
             </Box>
-            <Box>
+            <Box minHeight={42}>
                 {status === 'initialized' && lastScore !== null && go !== 0 && (
                     <ListItem>
                         <ListItemAvatar>
@@ -146,12 +160,29 @@ module.exports = function TurnInfo({ turn, me, score, ...others }) {
                     </Grow>
                 )}
                 {isMe && status === 'in-progress' && started && (
-                    <Grow in={isIn}>
-                        <Box textAlign='center'>
-                            <CheckIcon />
-                            <Typography>{lastWord}</Typography>
-                        </Box>
-                    </Grow>
+                    <Box textAlign='center'>
+                        <Button
+                            variant='contained'
+                            color='primary'
+                            size='large'
+                            fullWidth={!smUp}
+                            startIcon={
+                                <ClockIconWrapper>
+                                    <ClockCountdown
+                                        start={start}
+                                        end={end}
+                                        size={16}
+                                        fontSize={0}
+                                        weight={2}
+                                        alpha={1}
+                                        color={theme.palette.primary.contrastText}
+                                    />
+                                </ClockIconWrapper>
+                            }
+                        >
+                            Got it
+                        </Button>
+                    </Box>
                 )}
             </Box>
         </Box>
@@ -172,6 +203,16 @@ module.exports.propTypes = {
     }),
     turn: T.object.isRequired
 };
+
+internals.ClockIconWrapper = Styled.span`
+    display: inline-block;
+    > * {
+        position: relative;
+        canvas {
+            left: 0;
+        }
+    }
+`;
 
 internals.getLastItem = (arr) => arr[arr.length - 1];
 
