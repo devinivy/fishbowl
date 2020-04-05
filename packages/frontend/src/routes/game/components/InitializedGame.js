@@ -2,13 +2,18 @@ const React = require('react');
 const { useState, useCallback } = require('react');
 const { useTheme } = require('@material-ui/core/styles');
 const { default: Styled } = require('styled-components');
+const { default: useToggle } = require('react-use/lib/useToggle');
+const { default: Dialog } = require('@material-ui/core/Dialog');
+const { default: Toolbar } = require('@material-ui/core/Toolbar');
 const { default: Box } = require('@material-ui/core/Box');
 const { default: Button } = require('@material-ui/core/Button');
 const { default: TextField } = require('@material-ui/core/TextField');
 const { default: Divider } = require('@material-ui/core/Divider');
 const { default: Typography } = require('@material-ui/core/Typography');
 const { default: IconButton } = require('@material-ui/core/IconButton');
-const { default: CloseIcon } = require('@material-ui/icons/Cancel');
+const { default: CancelIcon } = require('@material-ui/icons/Cancel');
+const { default: CloseIcon } = require('@material-ui/icons/Close');
+const { default: LaunchIcon } = require('@material-ui/icons/Launch');
 const { default: LightGreen } = require('@material-ui/core/colors/lightGreen');
 const { default: Teal } = require('@material-ui/core/colors/teal');
 const { default: Red } = require('@material-ui/core/colors/red');
@@ -25,9 +30,10 @@ module.exports = function InitializedGame({ game }) {
 
     const theme = useTheme();
     const [showJoin, setShowJoin] = useState(true);
+    const [expandTurn, toggleExpandTurn] = useToggle(false);
     const handleCloseJoin = useCallback(() => setShowJoin(false), []);
 
-    const { GreenButton, CloseIconButton } = internals;
+    const { GreenButton, CloseIconButton, LaunchIconButton } = internals;
     const allPlayersReady = game.players.every(({ status }) => status === 'ready');
 
     return (
@@ -74,7 +80,7 @@ module.exports = function InitializedGame({ game }) {
                                     size='small'
                                     onClick={handleCloseJoin}
                                 >
-                                    <CloseIcon />
+                                    <CancelIcon />
                                 </CloseIconButton>
                                 <Box mr={2}>
                                     <Button variant='outlined'>join</Button>
@@ -92,10 +98,43 @@ module.exports = function InitializedGame({ game }) {
             </Box>
             {game.turn && (
                 <GameSection
+                    position='relative'
                     bgcolor={game.turn.player.team === 'a' ? Teal[50] : Red[50]}
                 >
+                    <LaunchIconButton
+                        title='launch'
+                        size='small'
+                        onClick={toggleExpandTurn}
+                    >
+                        <LaunchIcon />
+                    </LaunchIconButton>
                     <TurnInfo minHeight={375} turn={game.turn} me={game.me} score={game.score} />
                 </GameSection>
+            )}
+            {game.turn && (
+                <Dialog fullScreen open={expandTurn} onClose={toggleExpandTurn}>
+                    <Toolbar variant='dense'>
+                        <Box component={Typography} flex={1}>
+                            <Box component='span' ml={1}>
+                                <span role='img' aria-label='fish'>🐟</span>
+                            </Box>
+                        </Box>
+                        {game.me && (
+                            <Box component={Typography} mr={1} variant='subtitle2'>
+                                <Box component='span' mr={.5}>
+                                    <span role='img' aria-label='hi'>👋</span>
+                                </Box>
+                                {game.me.nickname}
+                            </Box>
+                        )}
+                        <IconButton size='small' edge='end' onClick={toggleExpandTurn}>
+                            <CloseIcon />
+                        </IconButton>
+                    </Toolbar>
+                    <Box p={1} bgcolor={game.turn.player.team === 'a' ? Teal[50] : Red[50]} display='flex' flex={1}>
+                        <TurnInfo flex={1} turn={game.turn} me={game.me} score={game.score} />
+                    </Box>
+                </Dialog>
             )}
             <GameSection>
                 <TeamList players={game.players} me={game.me} />
@@ -128,6 +167,16 @@ internals.CloseIconButton = Styled(IconButton)`
     position: absolute;
     top: -${({ theme }) => theme.spacing(1)}px;
     right: -${({ theme }) => theme.spacing(1)}px;
+    svg {
+        width: .75em;
+        height: .75em;
+    }
+`;
+
+internals.LaunchIconButton = Styled(IconButton)`
+    position: absolute;
+    top: 0px;
+    right: 0px;
     svg {
         width: .75em;
         height: .75em;

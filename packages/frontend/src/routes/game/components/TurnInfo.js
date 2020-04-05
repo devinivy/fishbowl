@@ -74,10 +74,10 @@ module.exports = function TurnInfo({ turn, me, score, ...others }) {
             </PlayerListItem>
             <Box flex={1} display='flex' alignItems='center' justifyContent='center'>
                 {!isMe && status === 'initialized' && (
-                    <div>
+                    <Box textAlign='center'>
                         {go === 0 && <Typography variant='subtitle1' color='textSecondary'>starting round {round + 1}</Typography>}
                         <Typography variant='h4' color='textSecondary'>waiting...</Typography>
-                    </div>
+                    </Box>
                 )}
                 {isMe && status === 'initialized' && (
                     <Box textAlign='center'>

@@ -55,7 +55,16 @@ module.exports.propTypes = {
 };
 
 internals.CornerFab = Styled(Fab)`
-    position: absolute;
+    position: fixed;
     bottom: ${({ theme }) => theme.spacing(3)}px;
     right: ${({ theme }) => theme.spacing(3)}px;
+    // Take into account auto margins around list
+    ${({ theme }) => theme.breakpoints.up('sm')} {
+        right: calc(${({ theme }) => theme.spacing(3)}px + (100% - 600px) / 2);
+    }
+    // When page padding kicks-in, it trumps the auto margins around list
+    ${({ theme }) => theme.breakpoints.up('sm')} and
+        (max-width: ${({ theme }) => 600 + 2 * theme.spacing(3)}px) {
+        right: ${({ theme }) => 2 * theme.spacing(3)}px;
+    }
 `;
