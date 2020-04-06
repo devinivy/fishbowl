@@ -23,6 +23,7 @@ const Types = require('../../../components/types');
 const GameSection = require('./GameSection');
 const TeamList = require('./TeamList');
 const TurnInfo = require('./TurnInfo');
+const ScoreSummary = require('./ScoreSummary');
 
 const internals = {};
 
@@ -96,6 +97,11 @@ module.exports = function InitializedGame({ game }) {
             <Box mb={{ sm: 2 }}>
                 <Divider />
             </Box>
+            {['in-progress', 'finished'].includes(game.status) && (
+                <GameSection>
+                    <ScoreSummary status={game.status} score={game.score} />
+                </GameSection>
+            )}
             {game.turn && (
                 <GameSection
                     position='relative'
