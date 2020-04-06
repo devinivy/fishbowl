@@ -1,15 +1,17 @@
 'use strict';
 
+const Dotenv = require('dotenv');
 const Confidence = require('confidence');
 const Toys = require('toys');
 const Schwifty = require('schwifty');
 
-// Used for interop with CDK deployment
-const dbSecret = JSON.parse(process.env.DB_SECRET || '{}');
+// Pull .env into process.env
+Dotenv.config({ path: `${__dirname}/.env` });
 
+// Glue manifest as a confidence store
 module.exports = new Confidence.Store({
     server: {
-        host: '0.0.0.0',
+        host: 'localhost',
         port: {
             $env: 'PORT',
             $coerce: 'number',
@@ -40,12 +42,10 @@ module.exports = new Confidence.Store({
                     $base: {
                         migrateOnStart: true,
                         knex: {
-                            client: 'pg',
+                            client: 'sqlite3',
+                            useNullAsDefault: true,     // Suggested for sqlite3
                             connection: {
-                                host: { $env: 'DB_HOST', $default: dbSecret.host },
-                                user: { $env: 'DB_USER', $default: dbSecret.username },
-                                password: { $env: 'DB_PASSWORD', $default: dbSecret.password },
-                                database: { $env: 'DB_NAME', $default: dbSecret.dbname }
+                                filename: ':memory:'
                             },
                             migrations: {
                                 stub: Schwifty.migrationsStubPath
@@ -53,7 +53,7 @@ module.exports = new Confidence.Store({
                         }
                     },
                     production: {
-                        migrateOnStart: true
+                        migrateOnStart: false
                     }
                 }
             },
