@@ -17,9 +17,12 @@
   "dependencies": {
     "@hapi/boom": "9.x.x",
     "@hapi/joi": "17.x.x",
+    "@hapi/nes": "^12.0.2",
     "haute-couture": "3.x.x",
     "objection": "2.x.x",
-    "schwifty": "5.x.x"
+    "schmervice": "^1.5.0",
+    "schwifty": "5.x.x",
+    "shortid": "^2.2.15"
   },
   "peerDependencies": {
     "knex": "0.20.x"
