@@ -7,7 +7,34 @@ module.exports = Schmervice.withName('gameService', (server) => {
     const models = () => server.models();
     const services = () => server.services();
 
+    server.event('game-updated');
+
+    const mutation = (mutate) => {
+
+        return async (gameId, opts, txn) => {
+
+            const { Game } = models();
+            const { gameService } = services();
+
+            const game = await gameService.getById(gameId, txn);
+
+            const updatedGame = await Game.query(txn)
+                .patchAndFetchById(gameId, mutate(game, opts) || game)
+                .throwIfNotFound();
+
+            server.events.emit('game-updated', updatedGame);
+
+            return updatedGame;
+        };
+    };
+
     return {
+        async getAll(txn) {
+
+            const { Game } = models();
+
+            return await Game.query(txn).orderBy('createdAt', 'desc');
+        },
         async getById(gameId, txn) {
 
             const { Game } = models();
@@ -39,12 +66,7 @@ module.exports = Schmervice.withName('gameService', (server) => {
 
             return game;
         },
-        async join(gameId, { nickname }, txn) {
-
-            const { Game } = models();
-            const { gameService } = services();
-
-            const { state } = await gameService.getById(gameId, txn);
+        join: mutation(({ state }, { nickname }) => {
 
             if (state.status !== 'initialized') {
                 throw new Error();
@@ -61,19 +83,8 @@ module.exports = Schmervice.withName('gameService', (server) => {
             state.players[nickname] = { nickname, team, status: 'not-ready' };
             state.playerOrder.push(nickname);
             state.score.player[nickname] = [];
-
-            const game = await Game.query(txn)
-                .patchAndFetchById(gameId, { state })
-                .throwIfNotFound();
-
-            return game;
-        },
-        async playerReady(gameId, { nickname, words }, txn) {
-
-            const { Game } = models();
-            const { gameService } = services();
-
-            const { state } = await gameService.getById(gameId, txn);
+        }),
+        playerReady: mutation(({ state }, { nickname, words }) => {
 
             if (state.status !== 'initialized') {
                 throw new Error();
@@ -91,12 +102,20 @@ module.exports = Schmervice.withName('gameService', (server) => {
 
             state.players[nickname] = { ...player, status: 'ready' };
             state.words.push(...words);
+        }),
+        present(game, nickname) {
 
-            const game = await Game.query(txn)
-                .patchAndFetchById(gameId, { state })
-                .throwIfNotFound();
+            const { id, createdAt, state: { status, players, playerOrder, score } } = game;
 
-            return game;
+            return {
+                id,
+                createdAt,
+                status,
+                me: players[nickname] || null,
+                players: playerOrder.map((nick) => players[nick]),
+                score,
+                turn: null  // TODO
+            };
         }
     };
 });
