@@ -1,4 +1,27 @@
+const Redux = require('redux');
+const ReduxDevtools = require('redux-devtools-extension/logOnlyInProduction');
 const MiddleEnd = require('strange-middle-end');
-const Config = require('./config');
+const Router = require('./router');
 
-module.exports = MiddleEnd.create(Config);
+exports.create = (options = {}) => {
+
+    const middleEnd = MiddleEnd.create({
+        mods: () => ({
+            router: Router(middleEnd, options)
+        }),
+        createStore: (reducer, { router }) => {
+
+            const middleware = [
+                MiddleEnd.middleware.thunk,
+                options.logErrors && MiddleEnd.middleware.errorLogger,
+                router.middleware
+            ];
+
+            return Redux.createStore(reducer, ReduxDevtools.composeWithDevTools(
+                Redux.applyMiddleware(...middleware.filter(Boolean))
+            ));
+        }
+    });
+
+    return middleEnd;
+};
