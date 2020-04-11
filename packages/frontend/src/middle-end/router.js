@@ -1,7 +1,7 @@
 const History = require('history');
 const ConnectedRouter = require('connected-react-router');
 
-module.exports = ({ basePath }) => {
+module.exports = (m, { basePath }) => {
 
     const history = History.createBrowserHistory({
         basename: basePath
