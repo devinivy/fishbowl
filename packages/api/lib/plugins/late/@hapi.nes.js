@@ -1,3 +1,14 @@
 'use strict';
 
-module.exports = {};
+module.exports = {
+    plugins: {
+        options: {
+            auth: {
+                route: {
+                    strategy: 'player',
+                    mode: 'optional'
+                }
+            }
+        }
+    }
+};

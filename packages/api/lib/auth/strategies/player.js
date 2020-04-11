@@ -1,21 +1,23 @@
 'use strict';
 
-module.exports = {
+module.exports = (server) => ({
     scheme: 'basic',
     options: {
         async validate(request, username, password) {
 
-            const { gameService } = request.services();
+            // TODO consider auto-joining the game
+
+            const { gameService: { getById } } = server.services();
 
             const nickname = username;
             const gameId = password;
 
-            const game = await gameService.getById(gameId);
+            const game = await getById(gameId);
 
             return {
-                isValid: nickname in game.players,
+                isValid: nickname in game.state.players,
                 credentials: { gameId, nickname }
             };
         }
     }
-};
+});

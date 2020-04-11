@@ -2,7 +2,7 @@
 
 module.exports = {
     method: 'get',
-    path: '/game/{id}',
+    path: '/games/{id}',
     options: {
         auth: {
             strategy: 'player',
