@@ -1,5 +1,6 @@
 const React = require('react');
 const { useState } = require('react');
+const T = require('prop-types');
 const { useTheme } = require('@material-ui/core/styles');
 const { default: Styled } = require('styled-components');
 const { default: useToggle } = require('react-use/lib/useToggle');
@@ -11,15 +12,14 @@ const { default: Typography } = require('@material-ui/core/Typography');
 const { default: IconButton } = require('@material-ui/core/IconButton');
 const { default: CancelIcon } = require('@material-ui/icons/Cancel');
 const { default: LightGreen } = require('@material-ui/core/colors/lightGreen');
-const GameListItem = require('../../../components/GameListItem');
 const SubmitWordsForm = require('../../../components/SubmitWordsForm');
 const Types = require('../../../components/types');
+const GameHeader = require('./GameHeader');
 const GameSection = require('./GameSection');
 const TeamList = require('./TeamList');
 
 const internals = {};
 
-// eslint-disable-next-line react/prop-types
 module.exports = function InitializedGame({ game, onSubmitJoin, onSubmitWords }) {
 
     const theme = useTheme();
@@ -31,61 +31,42 @@ module.exports = function InitializedGame({ game, onSubmitJoin, onSubmitWords })
 
     return (
         <Box maxWidth={theme.breakpoints.values.md} width='100%' mx='auto'>
-            <Box
-                display='flex'
-                flexWrap='wrap'
-                justifyContent='space-between'
-                mt={{ xs: 0, sm: 2 }}
-                mb={{ xs: 0, sm: 1 }}
-            >
-                <Box flexGrow={2}>
-                    <GameListItem component='div' game={game} />
-                </Box>
-                {(game.me || showJoin) && (
-                    <Box
-                        display='flex'
-                        position='relative'
-                        px={2}
-                        py={!game.me && { xs: 2, sm: 1 }}
-                        my={game.me ? 1 : 0}
-                        bgcolor={!game.me && 'secondary.main'}
-                        alignItems='center'
-                        justifyContent='center'
-                        flexBasis={!game.me && 230}
-                        flexGrow={{ xs: 1, sm: 0 }}
-                        flexShrink={1}
-                        borderRadius={{ xs: 0, sm: 'borderRadius' }}
-                    >
-                        {game.me && (
-                            <GreenButton
-                                fullWidth
-                                disabled={!allPlayersReady}
-                                title={!allPlayersReady && 'not all players are ready'}
-                                variant='contained'
-                            >
-                                begin
-                            </GreenButton>
-                        )}
-                        {!game.me && (
-                            <>
-                                <CloseIconButton
-                                    title='spectate'
-                                    size='small'
-                                    onClick={toggleShowJoin}
-                                >
-                                    <CancelIcon />
-                                </CloseIconButton>
-                                <Box mr={2}>
-                                    <Button variant='outlined' onClick={() => onSubmitJoin({ nickname })}>join</Button>
-                                </Box>
-                                <Box>
-                                    <TextField fullWidth placeholder='nickname' onChange={(ev) => setNickname(ev.target.value)} value={nickname} />
-                                </Box>
-                            </>
-                        )}
-                    </Box>
+            <GameHeader game={game}>
+                {game.me && (
+                    <GameHeader.Action my={1}>
+                        <GreenButton
+                            fullWidth
+                            disabled={!allPlayersReady}
+                            title={!allPlayersReady && 'not all players are ready'}
+                            variant='contained'
+                        >
+                            begin
+                        </GreenButton>
+                    </GameHeader.Action>
                 )}
-            </Box>
+                {!game.me && showJoin && (
+                    <GameHeader.Action
+                        position='relative'
+                        py={{ xs: 2, sm: 1 }}
+                        bgcolor='secondary.main'
+                        flexBasis={230}
+                    >
+                        <CloseIconButton
+                            title='spectate'
+                            size='small'
+                            onClick={toggleShowJoin}
+                        >
+                            <CancelIcon />
+                        </CloseIconButton>
+                        <Box mr={2}>
+                            <Button variant='outlined' onClick={() => onSubmitJoin({ nickname })}>join</Button>
+                        </Box>
+                        <Box>
+                            <TextField fullWidth placeholder='nickname' onChange={(ev) => setNickname(ev.target.value)} value={nickname} />
+                        </Box>
+                    </GameHeader.Action>
+                )}
+            </GameHeader>
             <Box mb={{ sm: 2 }}>
                 <Divider />
             </Box>
@@ -103,7 +84,9 @@ module.exports = function InitializedGame({ game, onSubmitJoin, onSubmitWords })
 };
 
 module.exports.propTypes = {
-    game: Types.game.isRequired
+    game: Types.game.isRequired,
+    onSubmitJoin: T.func.isRequired,
+    onSubmitWords: T.func.isRequired
 };
 
 internals.GreenButton = Styled(Button)`

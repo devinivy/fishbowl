@@ -1,5 +1,6 @@
 const React = require('react');
 const { useState } = require('react');
+const T = require('prop-types');
 const { useTheme } = require('@material-ui/core/styles');
 const { default: Styled } = require('styled-components');
 const { default: useToggle } = require('react-use/lib/useToggle');
@@ -16,8 +17,8 @@ const { default: CloseIcon } = require('@material-ui/icons/Close');
 const { default: LaunchIcon } = require('@material-ui/icons/Launch');
 const { default: Teal } = require('@material-ui/core/colors/teal');
 const { default: Red } = require('@material-ui/core/colors/red');
-const GameListItem = require('../../../components/GameListItem');
 const Types = require('../../../components/types');
+const GameHeader = require('./GameHeader');
 const GameSection = require('./GameSection');
 const TeamList = require('./TeamList');
 const TurnInfo = require('./TurnInfo');
@@ -25,7 +26,6 @@ const ScoreSummary = require('./ScoreSummary');
 
 const internals = {};
 
-// eslint-disable-next-line react/prop-types
 module.exports = function InProgressGame({ game, onSubmitJoin }) {
 
     const theme = useTheme();
@@ -37,52 +37,30 @@ module.exports = function InProgressGame({ game, onSubmitJoin }) {
 
     return (
         <Box maxWidth={theme.breakpoints.values.md} width='100%' mx='auto'>
-            <Box
-                display='flex'
-                flexWrap='wrap'
-                justifyContent='space-between'
-                mt={{ xs: 0, sm: 2 }}
-                mb={{ xs: 0, sm: 1 }}
-            >
-                <Box flexGrow={2}>
-                    <GameListItem component='div' game={game} />
-                </Box>
-                {(game.me || showJoin) && (
-                    <Box
-                        display='flex'
+            <GameHeader game={game}>
+                {!game.me && showJoin && (
+                    <GameHeader.Action
                         position='relative'
-                        px={2}
-                        py={!game.me && { xs: 2, sm: 1 }}
-                        my={game.me ? 1 : 0}
-                        bgcolor={!game.me && 'secondary.main'}
-                        alignItems='center'
-                        justifyContent='center'
-                        flexBasis={!game.me && 230}
-                        flexGrow={{ xs: 1, sm: 0 }}
-                        flexShrink={1}
-                        borderRadius={{ xs: 0, sm: 'borderRadius' }}
+                        py={{ xs: 2, sm: 1 }}
+                        bgcolor='secondary.main'
+                        flexBasis={230}
                     >
-                        {game.me && null}
-                        {!game.me && (
-                            <>
-                                <CloseIconButton
-                                    title='spectate'
-                                    size='small'
-                                    onClick={toggleShowJoin}
-                                >
-                                    <CancelIcon />
-                                </CloseIconButton>
-                                <Box mr={2}>
-                                    <Button variant='outlined' onClick={() => onSubmitJoin({ nickname })}>join</Button>
-                                </Box>
-                                <Box>
-                                    <TextField fullWidth placeholder='nickname' onChange={(ev) => setNickname(ev.target.value)} value={nickname} />
-                                </Box>
-                            </>
-                        )}
-                    </Box>
+                        <CloseIconButton
+                            title='spectate'
+                            size='small'
+                            onClick={toggleShowJoin}
+                        >
+                            <CancelIcon />
+                        </CloseIconButton>
+                        <Box mr={2}>
+                            <Button variant='outlined' onClick={() => onSubmitJoin({ nickname })}>join</Button>
+                        </Box>
+                        <Box>
+                            <TextField fullWidth placeholder='nickname' onChange={(ev) => setNickname(ev.target.value)} value={nickname} />
+                        </Box>
+                    </GameHeader.Action>
                 )}
-            </Box>
+            </GameHeader>
             <Box mb={{ sm: 2 }}>
                 <Divider />
             </Box>
@@ -133,7 +111,8 @@ module.exports = function InProgressGame({ game, onSubmitJoin }) {
 };
 
 module.exports.propTypes = {
-    game: Types.game.isRequired
+    game: Types.game.isRequired,
+    onSubmitJoin: T.func.isRequired
 };
 
 internals.CloseIconButton = Styled(IconButton)`
