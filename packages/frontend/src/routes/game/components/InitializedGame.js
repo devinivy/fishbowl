@@ -21,7 +21,7 @@ const SubmitWordsForm = require('./SubmitWordsForm');
 
 const internals = {};
 
-module.exports = function InitializedGame({ game, onSubmitJoin, onSubmitWords }) {
+module.exports = function InitializedGame({ game, onSubmitJoin, onSubmitWords, onClickBeginGame }) {
 
     const theme = useTheme();
     const [showJoin, toggleShowJoin] = useToggle(true);
@@ -29,6 +29,7 @@ module.exports = function InitializedGame({ game, onSubmitJoin, onSubmitWords })
 
     const { GreenButton, CloseIconButton } = internals;
     const allPlayersReady = game.players.every(({ status }) => status === 'ready');
+    const canBeginGame = game.players.length >= 2 && allPlayersReady;
 
     return (
         <Box maxWidth={theme.breakpoints.values.md} width='100%' mx='auto'>
@@ -37,9 +38,10 @@ module.exports = function InitializedGame({ game, onSubmitJoin, onSubmitWords })
                     <GameHeader.Action my={1}>
                         <GreenButton
                             fullWidth
-                            disabled={!allPlayersReady}
-                            title={!allPlayersReady && 'not all players are ready'}
+                            disabled={!canBeginGame}
+                            title={!canBeginGame && 'not all players are ready'}
                             variant='contained'
+                            onClick={onClickBeginGame}
                         >
                             begin
                         </GreenButton>
@@ -103,7 +105,8 @@ module.exports = function InitializedGame({ game, onSubmitJoin, onSubmitWords })
 module.exports.propTypes = {
     game: Types.game.isRequired,
     onSubmitJoin: T.func.isRequired,
-    onSubmitWords: T.func.isRequired
+    onSubmitWords: T.func.isRequired,
+    onClickBeginGame: T.func.isRequired
 };
 
 internals.GreenButton = Styled(Button)`
