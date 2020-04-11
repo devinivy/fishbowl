@@ -9,14 +9,16 @@ module.exports = (m) => {
         SUBSCRIBE_GAME,
         UNSUBSCRIBE_GAME,
         SUBSCRIPTION_GAME_UPDATE,
-        JOIN_GAME
+        JOIN_GAME,
+        PLAYER_READY
     } = MiddleEnd.createTypes('app', {
         GET_GAMES: MiddleEnd.type.async,
         CREATE_GAME: MiddleEnd.type.async,
         SUBSCRIBE_GAME: MiddleEnd.type.async,
         UNSUBSCRIBE_GAME: MiddleEnd.type.async,
         SUBSCRIPTION_GAME_UPDATE: MiddleEnd.type.simple,
-        JOIN_GAME: MiddleEnd.type.async
+        JOIN_GAME: MiddleEnd.type.async,
+        PLAYER_READY: MiddleEnd.type.async
     });
 
     const schema = {
@@ -105,6 +107,25 @@ module.exports = (m) => {
                         game,
                         nickname
                     };
+                }
+            }),
+            playerReady: MiddleEnd.createAction(PLAYER_READY, {
+                async handler({ words }) {
+
+                    const { client } = m.mods.app;
+                    const subscription = m.select.model.gameSubscription();
+
+                    if (!subscription) {
+                        throw new Error('Cannot make player ready, as there is not an active game subscription.');
+                    }
+
+                    const { game: id } = subscription;
+
+                    await client.request({
+                        method: 'post',
+                        path: `/games/${id}/player-ready`,
+                        payload: { words }
+                    });
                 }
             }),
             subscriptionGameUpdate: MiddleEnd.createAction(SUBSCRIPTION_GAME_UPDATE, (game) => {

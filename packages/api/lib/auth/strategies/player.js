@@ -16,7 +16,8 @@ module.exports = (server) => ({
                 isValid: hasPlayer(game, nickname),
                 credentials: {
                     gameId,
-                    nickname
+                    nickname,
+                    scope: `game-${game.id}`
                 }
             };
         }

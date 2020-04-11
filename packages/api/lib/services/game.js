@@ -96,7 +96,7 @@ module.exports = Schmervice.withName('gameService', (server) => {
                 throw new Error();
             }
 
-            if (!words || words.length !== 5) {
+            if (!words || !words.length) {
                 throw new Error();
             }
 

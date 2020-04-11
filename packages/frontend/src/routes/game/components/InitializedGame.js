@@ -28,7 +28,7 @@ const ScoreSummary = require('./ScoreSummary');
 const internals = {};
 
 // eslint-disable-next-line react/prop-types
-module.exports = function InitializedGame({ game, onSubmitJoin }) {
+module.exports = function InitializedGame({ game, onSubmitJoin, onSubmitWords }) {
 
     const theme = useTheme();
     const [showJoin, setShowJoin] = useState(true);
@@ -150,7 +150,7 @@ module.exports = function InitializedGame({ game, onSubmitJoin }) {
             {game.me && game.me.status === 'not-ready' && (
                 <GameSection>
                     <Typography variant='subtitle2'>Please pick five words to submit to the fishbowl.</Typography>
-                    <SubmitWordsForm onSubmit={(x) => console.log(x)} />
+                    <SubmitWordsForm onSubmit={(words) => onSubmitWords({ words })} />
                 </GameSection>
             )}
         </Box>

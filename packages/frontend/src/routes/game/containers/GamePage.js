@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-handler-names */
 const React = require('react');
 const T = require('prop-types');
 const { useEffect } = require('react');
@@ -22,8 +23,11 @@ module.exports = function GamePage({ match: { params } }) {
     }
 
     return (
-        // eslint-disable-next-line react/jsx-handler-names
-        <InitializedGame game={game} onSubmitJoin={m.dispatch.model.joinGame} />
+        <InitializedGame
+            game={game}
+            onSubmitJoin={m.dispatch.model.joinGame}
+            onSubmitWords={m.dispatch.model.playerReady}
+        />
     );
 };
 
