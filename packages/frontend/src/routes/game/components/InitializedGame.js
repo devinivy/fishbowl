@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/no-autofocus */
 const React = require('react');
 const { useState } = require('react');
 const T = require('prop-types');
@@ -46,10 +47,16 @@ module.exports = function InitializedGame({ game, onSubmitJoin, onSubmitWords })
                 )}
                 {!game.me && showJoin && (
                     <GameHeader.Action
+                        component='form'
                         position='relative'
                         py={{ xs: 2, sm: 1 }}
                         bgcolor='secondary.main'
                         flexBasis={230}
+                        onSubmit={(ev) => {
+
+                            ev.preventDefault();
+                            onSubmitJoin({ nickname });
+                        }}
                     >
                         <CloseIconButton
                             title='spectate'
@@ -59,10 +66,15 @@ module.exports = function InitializedGame({ game, onSubmitJoin, onSubmitWords })
                             <CancelIcon />
                         </CloseIconButton>
                         <Box mr={2}>
-                            <Button variant='outlined' onClick={() => onSubmitJoin({ nickname })}>join</Button>
+                            <Button type='submit' variant='outlined'>join</Button>
                         </Box>
                         <Box>
-                            <TextField fullWidth placeholder='nickname' onChange={(ev) => setNickname(ev.target.value)} value={nickname} />
+                            <TextField
+                                fullWidth
+                                placeholder='nickname'
+                                onChange={(ev) => setNickname(ev.target.value)}
+                                value={nickname}
+                            />
                         </Box>
                     </GameHeader.Action>
                 )}
@@ -75,8 +87,13 @@ module.exports = function InitializedGame({ game, onSubmitJoin, onSubmitWords })
             </GameSection>
             {game.me && game.me.status === 'not-ready' && (
                 <GameSection>
-                    <Typography variant='subtitle2'>Please pick five words to submit to the fishbowl.</Typography>
-                    <SubmitWordsForm onSubmit={(words) => onSubmitWords({ words })} />
+                    <Typography variant='subtitle2'>
+                        Please pick five words to submit to the fishbowl.
+                    </Typography>
+                    <SubmitWordsForm
+                        autoFocus
+                        onSubmit={(words) => onSubmitWords({ words })}
+                    />
                 </GameSection>
             )}
         </Box>

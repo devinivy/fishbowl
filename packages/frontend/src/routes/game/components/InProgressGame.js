@@ -40,10 +40,16 @@ module.exports = function InProgressGame({ game, onSubmitJoin }) {
             <GameHeader game={game}>
                 {!game.me && showJoin && (
                     <GameHeader.Action
+                        component='form'
                         position='relative'
                         py={{ xs: 2, sm: 1 }}
                         bgcolor='secondary.main'
                         flexBasis={230}
+                        onSubmit={(ev) => {
+
+                            ev.preventDefault();
+                            onSubmitJoin({ nickname });
+                        }}
                     >
                         <CloseIconButton
                             title='spectate'
@@ -53,10 +59,15 @@ module.exports = function InProgressGame({ game, onSubmitJoin }) {
                             <CancelIcon />
                         </CloseIconButton>
                         <Box mr={2}>
-                            <Button variant='outlined' onClick={() => onSubmitJoin({ nickname })}>join</Button>
+                            <Button type='submit' variant='outlined'>join</Button>
                         </Box>
                         <Box>
-                            <TextField fullWidth placeholder='nickname' onChange={(ev) => setNickname(ev.target.value)} value={nickname} />
+                            <TextField
+                                fullWidth
+                                placeholder='nickname'
+                                onChange={(ev) => setNickname(ev.target.value)}
+                                value={nickname}
+                            />
                         </Box>
                     </GameHeader.Action>
                 )}
