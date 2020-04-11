@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/no-autofocus */
 const React = require('react');
 const { useState, useCallback } = require('react');
 const T = require('prop-types');
@@ -8,7 +9,7 @@ const { default: Box } = require('@material-ui/core/Box');
 
 const internals = {};
 
-module.exports = function SubmitWordsForm({ onSubmit }) {
+module.exports = function SubmitWordsForm({ onSubmit, autoFocus, ...others }) {
 
     const [word1, setWord1] = useState('');
     const [word2, setWord2] = useState('');
@@ -37,9 +38,10 @@ module.exports = function SubmitWordsForm({ onSubmit }) {
             flexDirection='column'
             alignItems='flex-end'
             onSubmit={handleSubmit}
+            {...others}
         >
             <FieldWrapper display='flex' flexWrap='wrap'>
-                <TextField size='small' margin='normal' placeholder='first word' value={word1} onChange={handle(setWord1)} />
+                <TextField size='small' margin='normal' placeholder='first word' value={word1} onChange={handle(setWord1)} autoFocus={autoFocus} />
                 <TextField size='small' margin='normal' placeholder='second word' value={word2} onChange={handle(setWord2)} />
                 <TextField size='small' margin='normal' placeholder='third word' value={word3} onChange={handle(setWord3)} />
                 <TextField size='small' margin='normal' placeholder='fourth word' value={word4} onChange={handle(setWord4)} />
@@ -61,7 +63,8 @@ module.exports = function SubmitWordsForm({ onSubmit }) {
 };
 
 module.exports.propTypes = {
-    onSubmit: T.func.isRequired
+    onSubmit: T.func.isRequired,
+    autoFocus: T.bool
 };
 
 internals.FieldWrapper = Styled(Box)`
