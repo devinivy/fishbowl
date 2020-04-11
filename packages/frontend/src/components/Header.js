@@ -39,8 +39,6 @@ internals.SiteTitle = Styled(Typography).attrs({ variant: 'h6' })`
     flex-grow: 1;
     a {
         text-decoration: none;
-        :visited {
-            color: unset;
-        }
+        color: inherit;
     }
 `;
