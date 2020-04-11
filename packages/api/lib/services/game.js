@@ -68,13 +68,20 @@ module.exports = Schmervice.withName('gameService', (server) => {
 
             return game;
         },
-        join: mutation(({ state }, { nickname }) => {
+        join: mutation((game, { nickname }) => {
 
-            if (state.status !== 'initialized') {
+            const { state } = game;
+            const { gameService: { hasPlayer } } = services();
+
+            if (state.status !== 'initialized' && state.status !== 'in-progress') {
                 throw new Error();
             }
 
-            if (state.players[nickname]) {
+            if (state.status === 'in-progress' && !hasPlayer(game, nickname)) {
+                throw new Error();
+            }
+
+            if (hasPlayer(game, nickname)) {
                 return;
             }
 
