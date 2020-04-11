@@ -3,6 +3,8 @@ const T = require('prop-types');
 const { default: Box } = require('@material-ui/core/Box');
 const { default: List } = require('@material-ui/core/List');
 const { default: ListSubheader } = require('@material-ui/core/ListSubheader');
+const { default: Typography } = require('@material-ui/core/Typography');
+const { default: Divider } = require('@material-ui/core/Divider');
 const PlayerListItem = require('./PlayerListItem');
 
 const internals = {};
@@ -28,6 +30,19 @@ module.exports = function TeamList({ players, me, ...others }) {
                     <PlayerListItem key={player.nickname} player={player} me={me} />
                 ))}
             </Box>
+            {!players.length && (
+                <Box width='100%' textAlign='center'>
+                    <Box mb={1}>
+                        <Divider light variant='middle' />
+                    </Box>
+                    <Typography color='textSecondary' variant='subtitle1'>
+                        Nobody has joined yet
+                    </Typography>
+                    <Typography color='textSecondary' variant='caption'>
+                        but please do!
+                    </Typography>
+                </Box>
+            )}
         </Box>
     );
 };

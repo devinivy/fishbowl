@@ -1,16 +1,26 @@
 const React = require('react');
+const { default: Box } = require('@material-ui/core/Box');
+const { default: Typography } = require('@material-ui/core/Typography');
+const { default: Button } = require('@material-ui/core/Button');
 
 module.exports = () => {
 
     return (
-        <>
-            <h3>Oops! Something went wrong.</h3>
-            <h4>
-                You can keep browsing or try{' '}
-                <button onClick={() => window.location.reload()}>
+        <Box p={4}>
+            <Typography component='h1' variant='h6' gutterBottom>
+                Oops! Something went wrong.
+            </Typography>
+            <Typography>
+                You can try{' '}
+                <Button
+                    variant='outlined'
+                    size='small'
+                    color='primary'
+                    onClick={() => window.location.reload()}
+                >
                     reloading the page
-                </button>.
-            </h4>
-        </>
+                </Button>.
+            </Typography>
+        </Box>
     );
 };
