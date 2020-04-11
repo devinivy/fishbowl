@@ -36,9 +36,9 @@ module.exports = (m) => {
                 async handler() {
 
                     const { client } = m.mods.app;
-                    const { payload } = await client.request('games');
+                    const { payload: game } = await client.request('games');
 
-                    return payload;
+                    return game;
                 }
             }),
             subscribeGame: MiddleEnd.createAction(SUBSCRIBE_GAME, {
@@ -49,13 +49,12 @@ module.exports = (m) => {
                 async handler(id) {
 
                     const { client } = m.mods.app;
-
-                    const { payload } = await client.request(`/games/${id}`);
+                    const { payload: game } = await client.request(`/games/${id}`);
 
                     await client.subscribe(`/games/${id}`, m.dispatch.model.subscriptionGameUpdate);
 
                     return {
-                        game: payload,
+                        game,
                         nickname: null
                     };
                 }
@@ -76,6 +75,9 @@ module.exports = (m) => {
             }),
             joinGame: MiddleEnd.createAction(JOIN_GAME, {
                 index: SUBSCRIBE_GAME.BASE,
+                schema: {
+                    game: schema.game
+                },
                 async handler({ nickname }) {
 
                     const { client } = m.mods.app;
@@ -87,10 +89,7 @@ module.exports = (m) => {
 
                     const { game: id } = subscription;
 
-                    // TODO consider the order here, esp as it relates to
-                    // the state of auth as subscription changes come in.
-
-                    await client.request({
+                    const { payload: game } = await client.request({
                         method: 'post',
                         path: `/games/${id}/join`,
                         payload: { nickname }
@@ -103,12 +102,25 @@ module.exports = (m) => {
                     });
 
                     return {
-                        ...subscription,
+                        game,
                         nickname
                     };
                 }
             }),
             subscriptionGameUpdate: MiddleEnd.createAction(SUBSCRIPTION_GAME_UPDATE, (game) => {
+
+                const subscription = m.select.model.gameSubscription();
+                const expected = {
+                    game: game.id,
+                    nickname: game.me && game.me.nickname || null
+                };
+
+                if (!subscription ||
+                    subscription.game !== expected.game ||
+                    subscription.nickname !== expected.nickname) {
+                    // Ignore data out of date with our subscription
+                    return null;
+                }
 
                 return Normalizr.normalize(game, schema.game);
             }),
@@ -117,9 +129,9 @@ module.exports = (m) => {
                 async handler() {
 
                     const { client } = m.mods.app;
-                    const { payload } = await client.request('game-create');
+                    const { payload: game } = await client.request('game-create');
 
-                    return payload;
+                    return game;
                 },
                 after() {
 

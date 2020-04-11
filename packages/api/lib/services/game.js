@@ -73,7 +73,7 @@ module.exports = Schmervice.withName('gameService', (server) => {
             }
 
             if (state.players[nickname]) {
-                throw new Error();
+                return;
             }
 
             const mostRecentPlayer = state.playerOrder[state.playerOrder.length - 1];
@@ -103,6 +103,12 @@ module.exports = Schmervice.withName('gameService', (server) => {
             state.players[nickname] = { ...player, status: 'ready' };
             state.words.push(...words);
         }),
+        hasPlayer(game, nickname) {
+
+            const { state: { players } } = game;
+
+            return nickname in players;
+        },
         present(game, nickname) {
 
             const { id, createdAt, state: { status, players, playerOrder, score } } = game;
