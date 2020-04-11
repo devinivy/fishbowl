@@ -1,9 +1,12 @@
 /* eslint-disable react/jsx-handler-names */
 const React = require('react');
-const T = require('prop-types');
 const { useEffect } = require('react');
+const T = require('prop-types');
 const { useSelector } = require('react-redux');
 const InitializedGame = require('../components/InitializedGame');
+const InProgressGame = require('../components/InProgressGame');
+const FinishedGame = require('../components/FinishedGame');
+const BadImplementation = require('../../../components/BadImplementation');
 const { useMiddleEnd } = require('../../../middle-end/react');
 
 module.exports = function GamePage({ match: { params } }) {
@@ -19,16 +22,33 @@ module.exports = function GamePage({ match: { params } }) {
     }, [m, params.id]);
 
     if (!game) {
-        return null;
+        return null; // TODO loading / not found
     }
 
-    return (
-        <InitializedGame
-            game={game}
-            onSubmitJoin={m.dispatch.model.joinGame}
-            onSubmitWords={m.dispatch.model.playerReady}
-        />
-    );
+    if (game.status === 'initialized') {
+        return (
+            <InitializedGame
+                game={game}
+                onSubmitJoin={m.dispatch.model.joinGame}
+                onSubmitWords={m.dispatch.model.playerReady}
+            />
+        );
+    }
+
+    if (game.status === 'in-progress') {
+        return (
+            <InProgressGame
+                game={game}
+                onSubmitJoin={m.dispatch.model.joinGame}
+            />
+        );
+    }
+
+    if (game.status === 'finished') {
+        return <FinishedGame game={game} />;
+    }
+
+    return <BadImplementation />;
 };
 
 module.exports.propTypes = {
