@@ -99,11 +99,13 @@ module.exports = function InProgressGame({ game, onSubmitJoin }) {
                         </Box>
                     </Box>
                     {game.me && (
-                        <Box component={Typography} mr={1} variant='subtitle2'>
-                            <Box component='span' mr={.5}>
-                                <span role='img' aria-label='hi'>👋</span>
-                            </Box>
-                            {game.me.nickname}
+                        <Box mr={1}>
+                            <Typography variant='subtitle2'>
+                                <Box component='span' mr={.5}>
+                                    <span role='img' aria-label='hi'>👋</span>
+                                </Box>
+                                {game.me.nickname}
+                            </Typography>
                         </Box>
                     )}
                     <IconButton size='small' edge='end' onClick={toggleExpandTurn}>
