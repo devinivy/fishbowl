@@ -13,11 +13,11 @@ const { default: Typography } = require('@material-ui/core/Typography');
 const { default: IconButton } = require('@material-ui/core/IconButton');
 const { default: CancelIcon } = require('@material-ui/icons/Cancel');
 const { default: LightGreen } = require('@material-ui/core/colors/lightGreen');
-const SubmitWordsForm = require('../../../components/SubmitWordsForm');
 const Types = require('../../../components/types');
 const GameHeader = require('./GameHeader');
 const GameSection = require('./GameSection');
 const TeamList = require('./TeamList');
+const SubmitWordsForm = require('./SubmitWordsForm');
 
 const internals = {};
 
