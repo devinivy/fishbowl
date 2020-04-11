@@ -27,10 +27,12 @@ const ScoreSummary = require('./ScoreSummary');
 
 const internals = {};
 
-module.exports = function InitializedGame({ game }) {
+// eslint-disable-next-line react/prop-types
+module.exports = function InitializedGame({ game, onSubmitJoin }) {
 
     const theme = useTheme();
     const [showJoin, setShowJoin] = useState(true);
+    const [nickname, setNickname] = useState('');
     const [expandTurn, toggleExpandTurn] = useToggle(false);
     const handleCloseJoin = useCallback(() => setShowJoin(false), []);
 
@@ -84,10 +86,10 @@ module.exports = function InitializedGame({ game }) {
                                     <CancelIcon />
                                 </CloseIconButton>
                                 <Box mr={2}>
-                                    <Button variant='outlined'>join</Button>
+                                    <Button variant='outlined' onClick={() => onSubmitJoin({ nickname })}>join</Button>
                                 </Box>
                                 <Box>
-                                    <TextField fullWidth placeholder='nickname' />
+                                    <TextField fullWidth placeholder='nickname' onChange={(ev) => setNickname(ev.target.value)} value={nickname} />
                                 </Box>
                             </>
                         )}

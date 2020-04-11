@@ -12,7 +12,7 @@ const Types = require('../../../components/types');
 
 const internals = {};
 
-module.exports = function HomePage({ games }) {
+module.exports = function HomePage({ games, onClickAdd, ...others }) {
 
     const { CornerFab } = internals;
     const now = new Date();
@@ -24,6 +24,7 @@ module.exports = function HomePage({ games }) {
             boxShadow={1}
             bgcolor='background.paper'
             position='relative'
+            {...others}
         >
             <Box mx={2} mt={2}>
                 <Typography component='h2' variant='h5'>games</Typography>
@@ -43,7 +44,7 @@ module.exports = function HomePage({ games }) {
                     );
                 })}
             </List>
-            <CornerFab aria-label='New Game' color='primary'>
+            <CornerFab onClick={onClickAdd} aria-label='New Game' color='primary'>
                 <AddIcon />
             </CornerFab>
         </Box>
@@ -51,7 +52,8 @@ module.exports = function HomePage({ games }) {
 };
 
 module.exports.propTypes = {
-    games: T.arrayOf(Types.game).isRequired
+    games: T.arrayOf(Types.game).isRequired,
+    onClickAdd: T.func
 };
 
 internals.CornerFab = Styled(Fab)`

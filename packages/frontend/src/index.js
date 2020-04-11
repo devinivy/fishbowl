@@ -13,8 +13,9 @@ const Theme = require('./theme');
     });
 
     const middleEnd = M.create({
-        basePath: process.env.BASE_PATH,
-        logErrors: true
+        logErrors: true,
+        api: process.env.API_URL,
+        basePath: process.env.BASE_PATH
     }).initialize();
 
     ReactDOM.render(

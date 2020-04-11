@@ -13,7 +13,7 @@ const { default: Amber } = require('@material-ui/core/colors/amber');
 const { default: LightGreen } = require('@material-ui/core/colors/lightGreen');
 const { default: Teal } = require('@material-ui/core/colors/teal');
 const { default: Orange } = require('@material-ui/core/colors/orange');
-const FormatRelative = require('date-fns/formatRelative');
+const { default: FormatRelative } = require('date-fns/formatRelative');
 const Types = require('./types');
 
 const internals = {};
