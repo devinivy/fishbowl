@@ -11,7 +11,8 @@ module.exports = (m) => {
         SUBSCRIPTION_GAME_UPDATE,
         JOIN_GAME,
         PLAYER_READY,
-        BEGIN_GAME
+        BEGIN_GAME,
+        BEGIN_TURN
     } = MiddleEnd.createTypes('app', {
         GET_GAMES: MiddleEnd.type.async,
         CREATE_GAME: MiddleEnd.type.async,
@@ -20,14 +21,20 @@ module.exports = (m) => {
         SUBSCRIPTION_GAME_UPDATE: MiddleEnd.type.simple,
         JOIN_GAME: MiddleEnd.type.async,
         PLAYER_READY: MiddleEnd.type.async,
-        BEGIN_GAME: MiddleEnd.type.async
+        BEGIN_GAME: MiddleEnd.type.async,
+        BEGIN_TURN: MiddleEnd.type.async
     });
 
     const schema = {
         game: new Entity('games', {}, {
-            processStrategy: ({ createdAt, ...game }) => ({
+            processStrategy: ({ createdAt, turn, ...game }) => ({
                 ...game,
-                createdAt: new Date(createdAt)
+                createdAt: new Date(createdAt),
+                turn: turn && {
+                    ...turn,
+                    start: turn.start && new Date(turn.start),
+                    end: turn.end && new Date(turn.end)
+                }
             })
         })
     };
@@ -145,6 +152,24 @@ module.exports = (m) => {
                     await client.request({
                         method: 'post',
                         path: `/games/${id}/begin`
+                    });
+                }
+            }),
+            beginTurn: MiddleEnd.createAction(BEGIN_TURN, {
+                async handler() {
+
+                    const { client } = m.mods.app;
+                    const subscription = m.select.model.gameSubscription();
+
+                    if (!subscription) {
+                        throw new Error('Cannot start turn, as there is not an active game subscription.');
+                    }
+
+                    const { game: id } = subscription;
+
+                    await client.request({
+                        method: 'post',
+                        path: `/games/${id}/begin-turn`
                     });
                 }
             }),

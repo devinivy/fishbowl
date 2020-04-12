@@ -125,8 +125,6 @@ module.exports = Schmervice.withName('gameService', (server) => {
                 throw new Error();
             }
 
-            const { chooseWord } = internals;
-            const { word, nextWords } = chooseWord(state.words);
             const [firstPlayerNickname] = state.playerOrder;
 
             state.status = 'in-progress';
@@ -135,10 +133,10 @@ module.exports = Schmervice.withName('gameService', (server) => {
                 status: 'initialized',
                 round: 0,
                 go: 0,
-                roundWords: nextWords,
+                roundWords: state.words,
                 player: firstPlayerNickname,
                 lastPlayer: null,
-                word,
+                word: null,
                 lastWord: null,
                 start: null,
                 end: null
@@ -151,11 +149,38 @@ module.exports = Schmervice.withName('gameService', (server) => {
                 scores.push(nickname === firstPlayerNickname ? [0] : []);
             });
         }),
+        beginTurn: mutation(({ state }, opts) => {
+
+            const { now = Date.now() } = opts || {};
+
+            if (!state.turn || state.turn.status !== 'initialized') {
+                throw new Error();
+            }
+
+            const { chooseWord } = internals;
+            const { word, nextWords } = chooseWord(state.turn.roundWords);
+
+            state.turn = {
+                ...state.turn,
+                status: 'in-progress',
+                roundWords: nextWords,
+                word,
+                lastWord: state.turn.word,
+                start: new Date(now + 5000),
+                end: new Date(now + 5000 + 30000)
+            };
+        }),
         hasPlayer(game, nickname) {
 
             const { state: { players } } = game;
 
             return nickname in players;
+        },
+        currentPlayerTurn(game) {
+
+            const { state: { turn } } = game;
+
+            return (turn && turn.player) || null;
         },
         present(game, nickname) {
 
@@ -174,7 +199,7 @@ module.exports = Schmervice.withName('gameService', (server) => {
                 score,
                 turn: (status !== 'in-progress') ? null : {
                     status: turn.status,
-                    word: nickname === turn.player ? turn.word : null,
+                    word: (turn.status === 'in-progress' && nickname === turn.player) ? turn.word : null,
                     lastWord: turn.lastWord,
                     go: turn.go,
                     round: turn.round,
@@ -192,7 +217,7 @@ internals.chooseWord = (words) => {
 
     const nextWords = [...words];
     const randomIndex = Math.floor(Math.random() * words.length);
-    const [word] = nextWords.splice(randomIndex, 1);
+    const [word = null] = nextWords.splice(randomIndex, 1);
 
     return { word, nextWords };
 };

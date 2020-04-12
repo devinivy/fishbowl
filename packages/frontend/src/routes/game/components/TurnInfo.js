@@ -28,7 +28,7 @@ const internals = {};
 
 const NBSP = '\xa0';
 
-module.exports = function TurnInfo({ turn, me, score, ...others }) {
+module.exports = function TurnInfo({ turn, me, score, onClickReady, ...others }) {
 
     const theme = useTheme();
     const update = useUpdate();
@@ -82,7 +82,14 @@ module.exports = function TurnInfo({ turn, me, score, ...others }) {
                 {isMe && status === 'initialized' && (
                     <Box textAlign='center'>
                         {go === 0 && <Typography variant='subtitle1' color='textSecondary' gutterBottom>starting round {round + 1}</Typography>}
-                        <Button size='small' variant='outlined' color='primary'>Ready</Button>
+                        <Button
+                            size='small'
+                            variant='outlined'
+                            color='primary'
+                            onClick={onClickReady}
+                        >
+                            Ready
+                        </Button>
                     </Box>
                 )}
                 {status === 'in-progress' && !started && (
@@ -201,7 +208,8 @@ module.exports.propTypes = {
         }).isRequired,
         player: T.objectOf(T.arrayOf(T.number).isRequired).isRequired
     }),
-    turn: T.object.isRequired
+    turn: T.object.isRequired,
+    onClickReady: T.func
 };
 
 internals.ClockIconWrapper = Styled.span`

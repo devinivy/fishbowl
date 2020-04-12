@@ -31,7 +31,7 @@ module.exports = function GamePage({ match: { params } }) {
                 game={game}
                 onSubmitJoin={m.dispatch.model.joinGame}
                 onSubmitWords={m.dispatch.model.playerReady}
-                onClickBeginGame={m.dispatch.model.beginGame}
+                onClickBeginGame={() => m.dispatch.model.beginGame()}
             />
         );
     }
@@ -41,6 +41,7 @@ module.exports = function GamePage({ match: { params } }) {
             <InProgressGame
                 game={game}
                 onSubmitJoin={m.dispatch.model.joinGame}
+                onClickTurnReady={() => m.dispatch.model.beginTurn()}
             />
         );
     }

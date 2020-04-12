@@ -26,7 +26,7 @@ const ScoreSummary = require('./ScoreSummary');
 
 const internals = {};
 
-module.exports = function InProgressGame({ game, onSubmitJoin }) {
+module.exports = function InProgressGame({ game, onSubmitJoin, onClickTurnReady }) {
 
     const theme = useTheme();
     const [showJoin, toggleShowJoin] = useToggle(true);
@@ -89,7 +89,13 @@ module.exports = function InProgressGame({ game, onSubmitJoin }) {
                 >
                     <LaunchIcon />
                 </LaunchIconButton>
-                <TurnInfo minHeight={375} turn={game.turn} me={game.me} score={game.score} />
+                <TurnInfo
+                    minHeight={375}
+                    turn={game.turn}
+                    me={game.me}
+                    score={game.score}
+                    onClickReady={onClickTurnReady}
+                />
             </GameSection>
             <Dialog fullScreen open={expandTurn} onClose={toggleExpandTurn}>
                 <Toolbar variant='dense'>
@@ -113,7 +119,13 @@ module.exports = function InProgressGame({ game, onSubmitJoin }) {
                     </IconButton>
                 </Toolbar>
                 <Box p={1} bgcolor={game.turn.player.team === 'a' ? Teal[50] : Red[50]} display='flex' flex={1}>
-                    <TurnInfo flex={1} turn={game.turn} me={game.me} score={game.score} />
+                    <TurnInfo
+                        flex={1}
+                        turn={game.turn}
+                        me={game.me}
+                        score={game.score}
+                        onClickReady={onClickTurnReady}
+                    />
                 </Box>
             </Dialog>
             <GameSection>
@@ -125,7 +137,8 @@ module.exports = function InProgressGame({ game, onSubmitJoin }) {
 
 module.exports.propTypes = {
     game: Types.game.isRequired,
-    onSubmitJoin: T.func.isRequired
+    onSubmitJoin: T.func.isRequired,
+    onClickTurnReady: T.func.isRequired
 };
 
 internals.CloseIconButton = Styled(IconButton)`
