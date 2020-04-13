@@ -1,3 +1,5 @@
+require('core-js/stable');
+require('immer').enableES5();
 const HotLoader = require('react-hot-loader');
 const React = require('react');
 const ReactDOM = require('react-dom');
