@@ -27,7 +27,7 @@ module.exports = function ClockCountdown({ now, start, end, onEnd, ...others }) 
     useEffect(() => {
 
         setSeconds(computeSeconds);
-    }, [start, end, started]); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [Number(start), Number(end), started]); // eslint-disable-line react-hooks/exhaustive-deps
 
     return (
         <ReactCountdownClock

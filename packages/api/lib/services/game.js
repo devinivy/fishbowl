@@ -170,6 +170,55 @@ module.exports = Schmervice.withName('gameService', (server) => {
                 end: new Date(now + 5000 + 30000)
             };
         }),
+        claimWord: mutation(({ state }, _) => {
+
+            if (!state.turn || state.turn.status !== 'in-progress') {
+                throw new Error();
+            }
+
+            const { turn } = state;
+            const { chooseWord } = internals;
+
+            const player = state.players[turn.player];
+            state.score.team[player.team][turn.round]++;
+            const playerRoundScore = state.score.player[player.nickname][turn.round];
+            playerRoundScore[playerRoundScore.length - 1]++;
+
+            const { word, nextWords } = chooseWord(turn.roundWords);
+
+            if (word !== null) {
+                state.turn = {
+                    ...turn,
+                    roundWords: nextWords,
+                    word,
+                    lastWord: turn.word,
+                };
+                return;
+            }
+
+            const playerIndex = state.playerOrder.indexOf(turn.player);
+            const nextPlayerNickname = state.playerOrder[(playerIndex + 1) % state.playerOrder.length];
+
+            state.turn = {
+                status: 'initialized',
+                round: turn.round + 1,
+                go: 0,
+                roundWords: state.words,
+                player: nextPlayerNickname,
+                lastPlayer: turn.player,
+                word: null,
+                lastWord: turn.word,
+                start: null,
+                end: null
+            };
+
+            state.score.team.a.push(0);
+            state.score.team.b.push(0);
+            Object.entries(state.score.player).forEach(([nickname, scores]) => {
+
+                scores.push(nickname === nextPlayerNickname ? [0] : []);
+            });
+        }),
         hasPlayer(game, nickname) {
 
             const { state: { players } } = game;

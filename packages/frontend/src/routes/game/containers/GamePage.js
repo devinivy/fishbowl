@@ -42,6 +42,7 @@ module.exports = function GamePage({ match: { params } }) {
                 game={game}
                 onSubmitJoin={m.dispatch.model.joinGame}
                 onClickTurnReady={() => m.dispatch.model.beginTurn()}
+                onClickGotWord={() => m.dispatch.model.claimWord()}
             />
         );
     }

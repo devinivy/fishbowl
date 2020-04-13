@@ -12,7 +12,8 @@ module.exports = (m) => {
         JOIN_GAME,
         PLAYER_READY,
         BEGIN_GAME,
-        BEGIN_TURN
+        BEGIN_TURN,
+        CLAIM_WORD
     } = MiddleEnd.createTypes('app', {
         GET_GAMES: MiddleEnd.type.async,
         CREATE_GAME: MiddleEnd.type.async,
@@ -22,7 +23,8 @@ module.exports = (m) => {
         JOIN_GAME: MiddleEnd.type.async,
         PLAYER_READY: MiddleEnd.type.async,
         BEGIN_GAME: MiddleEnd.type.async,
-        BEGIN_TURN: MiddleEnd.type.async
+        BEGIN_TURN: MiddleEnd.type.async,
+        CLAIM_WORD: MiddleEnd.type.async
     });
 
     const schema = {
@@ -170,6 +172,24 @@ module.exports = (m) => {
                     await client.request({
                         method: 'post',
                         path: `/games/${id}/begin-turn`
+                    });
+                }
+            }),
+            claimWord: MiddleEnd.createAction(CLAIM_WORD, {
+                async handler() {
+
+                    const { client } = m.mods.app;
+                    const subscription = m.select.model.gameSubscription();
+
+                    if (!subscription) {
+                        throw new Error('Cannot claim word, as there is not an active game subscription.');
+                    }
+
+                    const { game: id } = subscription;
+
+                    await client.request({
+                        method: 'post',
+                        path: `/games/${id}/claim-word`
                     });
                 }
             }),

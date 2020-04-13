@@ -1,4 +1,5 @@
 const React = require('react');
+const { useEffect } = require('react');
 const T = require('prop-types');
 const { default: Styled } = require('styled-components');
 const { useTheme } = require('@material-ui/core/styles');
@@ -28,7 +29,7 @@ const internals = {};
 
 const NBSP = '\xa0';
 
-module.exports = function TurnInfo({ turn, me, score, onClickReady, ...others }) {
+module.exports = function TurnInfo({ turn, me, score, onClickReady, onClickGotWord, ...others }) {
 
     const theme = useTheme();
     const update = useUpdate();
@@ -49,7 +50,11 @@ module.exports = function TurnInfo({ turn, me, score, onClickReady, ...others })
     const losingScore = lastRoundTeamA > lastRoundTeamB ? lastRoundTeamB : lastRoundTeamA;
     const now = new Date();
     const started = now >= start;
-    const showLastWord = useFlasher(lastWord);
+    const [showLastWord, clearLastWordFlasher] = useFlasher(lastWord);
+    useEffect(() => {
+
+        clearLastWordFlasher();
+    }, [round, clearLastWordFlasher]);
 
     return (
         <Box display='flex' flexDirection='column' {...others}>
@@ -173,6 +178,7 @@ module.exports = function TurnInfo({ turn, me, score, onClickReady, ...others })
                             color='primary'
                             size='large'
                             fullWidth={!smUp}
+                            onClick={onClickGotWord}
                             startIcon={
                                 <ClockIconWrapper>
                                     <ClockCountdown
@@ -209,7 +215,8 @@ module.exports.propTypes = {
         player: T.objectOf(T.arrayOf(T.number).isRequired).isRequired
     }),
     turn: T.object.isRequired,
-    onClickReady: T.func
+    onClickReady: T.func,
+    onClickGotWord: T.func
 };
 
 internals.ClockIconWrapper = Styled.span`

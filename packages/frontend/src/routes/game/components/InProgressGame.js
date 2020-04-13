@@ -26,7 +26,7 @@ const ScoreSummary = require('./ScoreSummary');
 
 const internals = {};
 
-module.exports = function InProgressGame({ game, onSubmitJoin, onClickTurnReady }) {
+module.exports = function InProgressGame({ game, onSubmitJoin, onClickTurnReady, onClickGotWord }) {
 
     const theme = useTheme();
     const [showJoin, toggleShowJoin] = useToggle(true);
@@ -95,6 +95,7 @@ module.exports = function InProgressGame({ game, onSubmitJoin, onClickTurnReady 
                     me={game.me}
                     score={game.score}
                     onClickReady={onClickTurnReady}
+                    onClickGotWord={onClickGotWord}
                 />
             </GameSection>
             <Dialog fullScreen open={expandTurn} onClose={toggleExpandTurn}>
@@ -125,6 +126,7 @@ module.exports = function InProgressGame({ game, onSubmitJoin, onClickTurnReady 
                         me={game.me}
                         score={game.score}
                         onClickReady={onClickTurnReady}
+                        onClickGotWord={onClickGotWord}
                     />
                 </Box>
             </Dialog>
@@ -138,7 +140,8 @@ module.exports = function InProgressGame({ game, onSubmitJoin, onClickTurnReady 
 module.exports.propTypes = {
     game: Types.game.isRequired,
     onSubmitJoin: T.func.isRequired,
-    onClickTurnReady: T.func.isRequired
+    onClickTurnReady: T.func.isRequired,
+    onClickGotWord: T.func.isRequired
 };
 
 internals.CloseIconButton = Styled(IconButton)`
