@@ -6,7 +6,7 @@ const GameListItem = require('../../../components/GameListItem');
 
 const internals = {};
 
-module.exports = function GameHeader({ game, children, ...others }) {
+module.exports = function GameHeader({ game, listItemChildren, children, ...others }) {
 
     return (
         <Box
@@ -18,7 +18,13 @@ module.exports = function GameHeader({ game, children, ...others }) {
             {...others}
         >
             <Box flexGrow={2}>
-                <GameListItem component='div' game={game} />
+                <GameListItem
+                    component='div'
+                    ContainerComponent='div'
+                    game={game}
+                >
+                    {listItemChildren}
+                </GameListItem>
             </Box>
             {children}
         </Box>
@@ -27,7 +33,8 @@ module.exports = function GameHeader({ game, children, ...others }) {
 
 module.exports.propTypes = {
     game: Types.game.isRequired,
-    children: T.node
+    children: T.node,
+    listItemChildren: T.node
 };
 
 module.exports.Action = function GameHeaderAction(props) {

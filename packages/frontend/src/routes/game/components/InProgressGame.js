@@ -12,6 +12,7 @@ const { default: TextField } = require('@material-ui/core/TextField');
 const { default: Divider } = require('@material-ui/core/Divider');
 const { default: Typography } = require('@material-ui/core/Typography');
 const { default: IconButton } = require('@material-ui/core/IconButton');
+const { default: ListItemSecondaryAction } = require('@material-ui/core/ListItemSecondaryAction');
 const { default: CancelIcon } = require('@material-ui/icons/Cancel');
 const { default: CloseIcon } = require('@material-ui/icons/Close');
 const { default: LaunchIcon } = require('@material-ui/icons/Launch');
@@ -23,6 +24,7 @@ const GameSection = require('./GameSection');
 const TeamList = require('./TeamList');
 const TurnInfo = require('./TurnInfo');
 const ScoreSummary = require('./ScoreSummary');
+const EndGameConfirmationButton = require('./EndGameConfirmationButton');
 
 const internals = {};
 
@@ -37,7 +39,20 @@ module.exports = function InProgressGame({ game, onSubmitJoin, onClickTurnReady,
 
     return (
         <Box maxWidth={theme.breakpoints.values.md} width='100%' mx='auto'>
-            <GameHeader game={game}>
+            <GameHeader
+                game={game}
+                listItemChildren={game.me && (
+                    <ListItemSecondaryAction>
+                        <EndGameConfirmationButton
+                            edge='end'
+                            aria-label='end game'
+                            disabled={game.turn.round === 0 || game.turn.status === 'in-progress'}
+                            // eslint-disable-next-line react/jsx-handler-names
+                            onConfirm={console.log}
+                        />
+                    </ListItemSecondaryAction>
+                )}
+            >
                 {!game.me && showJoin && (
                     <GameHeader.Action
                         component='form'

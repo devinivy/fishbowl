@@ -18,7 +18,7 @@ const Types = require('./types');
 
 const internals = {};
 
-module.exports = function GameListItem({ game, now = new Date(), ...others }) {
+module.exports = function GameListItem({ game, now = new Date(), children, ...others }) {
 
     const { status, createdAt, players } = game;
     const { StatusAvatar, statusInfo } = internals;
@@ -46,13 +46,15 @@ module.exports = function GameListItem({ game, now = new Date(), ...others }) {
                     </>
                 ))}
             />
+            {children}
         </ListItem>
     );
 };
 
 module.exports.propTypes = {
     game: Types.game.isRequired,
-    now: T.instanceOf(Date).isRequired
+    now: T.instanceOf(Date).isRequired,
+    children: T.node
 };
 
 internals.statusInfo = {
