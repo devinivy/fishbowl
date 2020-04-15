@@ -12,6 +12,7 @@ module.exports = (m) => {
         JOIN_GAME,
         PLAYER_READY,
         BEGIN_GAME,
+        END_GAME,
         BEGIN_TURN,
         CLAIM_WORD
     } = MiddleEnd.createTypes('app', {
@@ -23,6 +24,7 @@ module.exports = (m) => {
         JOIN_GAME: MiddleEnd.type.async,
         PLAYER_READY: MiddleEnd.type.async,
         BEGIN_GAME: MiddleEnd.type.async,
+        END_GAME: MiddleEnd.type.async,
         BEGIN_TURN: MiddleEnd.type.async,
         CLAIM_WORD: MiddleEnd.type.async
     });
@@ -154,6 +156,24 @@ module.exports = (m) => {
                     await client.request({
                         method: 'post',
                         path: `/games/${id}/begin`
+                    });
+                }
+            }),
+            endGame: MiddleEnd.createAction(END_GAME, {
+                async handler() {
+
+                    const { client } = m.mods.app;
+                    const subscription = m.select.model.gameSubscription();
+
+                    if (!subscription) {
+                        throw new Error('Cannot end game, as there is not an active game subscription.');
+                    }
+
+                    const { game: id } = subscription;
+
+                    await client.request({
+                        method: 'post',
+                        path: `/games/${id}/end`
                     });
                 }
             }),

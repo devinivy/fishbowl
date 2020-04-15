@@ -28,7 +28,7 @@ const EndGameConfirmationButton = require('./EndGameConfirmationButton');
 
 const internals = {};
 
-module.exports = function InProgressGame({ game, onSubmitJoin, onClickTurnReady, onClickGotWord }) {
+module.exports = function InProgressGame({ game, onSubmitJoin, onClickTurnReady, onClickGotWord, onConfirmEndGame }) {
 
     const theme = useTheme();
     const [showJoin, toggleShowJoin] = useToggle(true);
@@ -46,9 +46,8 @@ module.exports = function InProgressGame({ game, onSubmitJoin, onClickTurnReady,
                         <EndGameConfirmationButton
                             edge='end'
                             aria-label='end game'
-                            disabled={game.turn.round === 0 || game.turn.status === 'in-progress'}
-                            // eslint-disable-next-line react/jsx-handler-names
-                            onConfirm={console.log}
+                            disabled={game.turn.status === 'in-progress' || game.turn.round === 0}
+                            onConfirm={onConfirmEndGame}
                         />
                     </ListItemSecondaryAction>
                 )}
@@ -156,7 +155,8 @@ module.exports.propTypes = {
     game: Types.game.isRequired,
     onSubmitJoin: T.func.isRequired,
     onClickTurnReady: T.func.isRequired,
-    onClickGotWord: T.func.isRequired
+    onClickGotWord: T.func.isRequired,
+    onConfirmEndGame: T.func.isRequired
 };
 
 internals.CloseIconButton = Styled(IconButton)`

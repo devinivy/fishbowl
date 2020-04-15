@@ -150,6 +150,17 @@ module.exports = Schmervice.withName('gameService', (server) => {
                 scores.push(nickname === firstPlayerNickname ? [0] : []);
             });
         }),
+        end: mutation(({ state }, _) => {
+
+            if (!state.turn ||
+                state.turn.round === 0 ||
+                state.turn.status !== 'initialized') {
+                throw new Error();
+            }
+
+            state.status = 'finished';
+            state.turn = null;
+        }),
         beginTurn: mutation(({ state }, opts) => {
 
             const { now = Date.now() } = opts || {};

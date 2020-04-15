@@ -7,6 +7,7 @@ const { default: Styled } = require('styled-components');
 const { default: Button } = require('@material-ui/core/Button');
 const { default: IconButton } = require('@material-ui/core/IconButton');
 const { default: Dialog } = require('@material-ui/core/Dialog');
+const { default: DialogTitle } = require('@material-ui/core/DialogTitle');
 const { default: DialogContent } = require('@material-ui/core/DialogContent');
 const { default: DialogContentText } = require('@material-ui/core/DialogContentText');
 const { default: DialogActions } = require('@material-ui/core/DialogActions');
@@ -35,9 +36,12 @@ module.exports = function EndGameConfirmationButton({ onConfirm, ...others }) {
                 <MeetingRoom />
             </RedIconButton>
             <Dialog open={open} onClose={toggleOpen}>
+                <DialogTitle>
+                    End Game
+                </DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        Are you sure you're all done?
+                        Are you sure everyone is done playing?
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
