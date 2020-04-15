@@ -1,5 +1,6 @@
 'use strict';
 
+const Curry = require('curry');
 const Schmervice = require('schmervice');
 
 const internals = {};
@@ -13,7 +14,7 @@ module.exports = Schmervice.withName('gameService', (server) => {
 
     const mutation = (mutate) => {
 
-        return async (gameId, opts, txn) => {
+        return Curry(async (gameId, opts, txn) => {
 
             const { Game } = models();
             const { gameService } = services();
@@ -27,7 +28,7 @@ module.exports = Schmervice.withName('gameService', (server) => {
             server.events.emit('game-updated', updatedGame);
 
             return updatedGame;
-        };
+        });
     };
 
     return {

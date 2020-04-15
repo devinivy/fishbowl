@@ -45,7 +45,7 @@ module.exports = Schmervice.withName('turnTimerService', (server) => {
             }
         } = services();
 
-        turns.forEach(unscheduleTurn);
+        turns().forEach(unscheduleTurn);
     });
 
     const timers = {};
@@ -88,7 +88,7 @@ module.exports = Schmervice.withName('turnTimerService', (server) => {
                 delete timers[id];
 
                 try {
-                    await transact((txn) => endTurn(id, null, txn));
+                    await transact(endTurn(id, null));
                 }
                 catch (err) {
                     Bounce.rethrow(err, 'system');

@@ -20,7 +20,7 @@ module.exports = {
             const { id } = request.params;
             const { credentials: { nickname } } = request.auth;
 
-            const game = await transact((txn) => begin(id, null, txn));
+            const game = await transact(begin(id, null));
 
             return present(game, nickname);
         }

@@ -21,7 +21,7 @@ module.exports = {
             const { id } = request.params;
             const { nickname } = request.payload;
 
-            const game = await transact((txn) => join(id, { nickname }, txn));
+            const game = await transact(join(id, { nickname }));
 
             return present(game, nickname);
         }

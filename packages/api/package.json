@@ -17,8 +17,10 @@
   "dependencies": {
     "@hapi/basic": "^6.0.0",
     "@hapi/boom": "9.x.x",
+    "@hapi/bounce": "^2.0.0",
     "@hapi/joi": "17.x.x",
     "@hapi/nes": "^12.0.2",
+    "curry": "^1.2.0",
     "haute-couture": "3.x.x",
     "objection": "2.x.x",
     "schmervice": "^1.5.0",

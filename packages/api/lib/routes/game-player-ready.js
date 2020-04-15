@@ -28,7 +28,7 @@ module.exports = {
             const { words } = request.payload;
             const { credentials: { nickname } } = request.auth;
 
-            const game = await transact((txn) => playerReady(id, { nickname, words }, txn));
+            const game = await transact(playerReady(id, { nickname, words }));
 
             return present(game, nickname);
         }
