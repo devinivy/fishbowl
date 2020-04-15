@@ -161,8 +161,12 @@ module.exports.propTypes = {
 
 internals.CloseIconButton = Styled(IconButton)`
     position: absolute;
-    top: -${({ theme }) => theme.spacing(1)}px;
-    right: -${({ theme }) => theme.spacing(1)}px;
+    top: 0;
+    right: 0;
+    ${({ theme }) => theme.breakpoints.up('sm')} {
+        top: -${({ theme }) => theme.spacing(1)}px;
+        right: -${({ theme }) => theme.spacing(1)}px;
+    }
     svg {
         width: .75em;
         height: .75em;
