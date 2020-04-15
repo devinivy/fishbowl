@@ -43,7 +43,9 @@ module.exports = function ScoreSummary({ status, score, ...others }) {
                     <>
                         <Box mb={1}>
                             <InlineAvatar as={TeamAvatar.A} />
-                            <span role='img' aria-label='handshake'>🤝</span>
+                            <Box component='span' ml={.5}>
+                                <span role='img' aria-label='handshake'>🤝</span>
+                            </Box>
                             <InlineAvatar as={TeamAvatar.B} />
                         </Box>
                         <Typography>
