@@ -1,16 +1,17 @@
 exports.watch = ({ store }, selector, onChange) => {
 
-    let lastValue = selector(store.getState());
+    let lastValueRef = selector(store.getState());
 
-    onChange(lastValue, lastValue);
+    onChange(lastValueRef, lastValueRef);
 
-    return store.subscribe((state) => {
+    return store.subscribe(() => {
 
         const value = selector(store.getState());
 
-        if (value !== lastValue) {
+        if (value !== lastValueRef) {
+            const lastValue = lastValueRef;
+            lastValueRef = value;
             onChange(value, lastValue);
-            lastValue = value;
         }
     });
 };

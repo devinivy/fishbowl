@@ -1,5 +1,6 @@
 const { schema: { Entity }, ...Normalizr } = require('normalizr');
 const MiddleEnd = require('strange-middle-end');
+const Helpers = require('../helpers');
 
 module.exports = (m) => {
 
@@ -44,6 +45,26 @@ module.exports = (m) => {
     };
 
     return {
+        initialize() {
+
+            Helpers.watch(m, m.selectors.app.connection, (connection, b) => {
+
+                if (connection === 'connected') {
+
+                    const hasGames = m.select.model.hasGames();
+
+                    if (hasGames) {
+                        m.dispatch.model.getGames();
+                    }
+
+                    const subscription = m.select.model.gameSubscription();
+
+                    if (subscription) {
+                        m.dispatch.model.subscribeGame(subscription.game);
+                    }
+                }
+            });
+        },
         actions: {
             getGames: MiddleEnd.createAction(GET_GAMES, {
                 index: true,
@@ -64,13 +85,16 @@ module.exports = (m) => {
                 async handler(id) {
 
                     const { client } = m.mods.app;
+                    const subscription = m.select.model.gameSubscription();
                     const { payload: game } = await client.request(`/games/${id}`);
 
                     await client.subscribe(`/games/${id}`, m.dispatch.model.subscriptionGameUpdate);
 
                     return {
                         game,
-                        nickname: null
+                        nickname: subscription && subscription.game === id ?
+                            subscription.nickname :
+                            null
                     };
                 }
             }),
@@ -252,6 +276,10 @@ module.exports = (m) => {
                 const { result = [] } = index;
 
                 return result.map((id) => m.selectors.model.gameById({ model }, id));
+            },
+            hasGames({ model }) {
+
+                return GET_GAMES.BASE in model.indexes;
             },
             gameById({ model }, id) {
 
