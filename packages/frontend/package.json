@@ -49,7 +49,8 @@
     "redux-thunk": "^2.3.0",
     "strange-middle-end": "^0.2.1",
     "strange-router": "^2.1.0",
-    "styled-components": "^5.0.0"
+    "styled-components": "^5.0.0",
+    "timesync": "^1.0.5"
   },
   "devDependencies": {
     "@babel/core": "^7.8.4",
