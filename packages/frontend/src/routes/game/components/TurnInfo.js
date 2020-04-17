@@ -24,6 +24,7 @@ const ClockCountdown = require('../../../components/ClockCountdown');
 const SecondsCountdown = require('../../../components/SecondsCountdown');
 const { useFlasher } = require('../../../components/useFlasher');
 const { Textfit } = require('react-textfit');
+const { useAppTime } = require('../../../containers/useAppTime');
 
 const internals = {};
 
@@ -32,6 +33,7 @@ const NBSP = '\xa0';
 module.exports = function TurnInfo({ turn, me, score, onClickReady, onClickGotWord, ...others }) {
 
     const theme = useTheme();
+    const getTime = useAppTime();
     const update = useUpdate();
     const smUp = useMediaQuery(theme.breakpoints.up('sm'));
 
@@ -48,8 +50,8 @@ module.exports = function TurnInfo({ turn, me, score, onClickReady, onClickGotWo
     const winningTeam = lastRoundTeamA > lastRoundTeamB ? 'a' : 'b';
     const winningScore = lastRoundTeamA > lastRoundTeamB ? lastRoundTeamA : lastRoundTeamB;
     const losingScore = lastRoundTeamA > lastRoundTeamB ? lastRoundTeamB : lastRoundTeamA;
-    const now = new Date();
-    const started = now >= start;
+    const now = getTime();
+    const started = now >= Number(start);
     const [showLastWord, clearLastWordFlasher] = useFlasher(lastWord);
     useEffect(() => {
 

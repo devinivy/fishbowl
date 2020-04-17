@@ -20,7 +20,7 @@ module.exports = function HomePageContainer() {
     useEffect(() => {
 
         m.dispatch.model.getGames();
-    }, []);
+    }, [m]);
 
     return (
         <HomePage games={games} onClickAdd={handleClickAdd} />

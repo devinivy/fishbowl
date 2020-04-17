@@ -52,7 +52,7 @@ module.exports = (m, { api }) => {
         },
         selectors: {
             connection: ({ app }) => app.connection,
-            now: ({ app }, time = Date.now()) => time + app.timeOffset
+            time: ({ app }, time = Date.now()) => time + app.timeOffset
         },
         reducer: MiddleEnd.createReducer({ mutable: true }, {
             timeOffset: 0,

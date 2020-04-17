@@ -5,14 +5,15 @@ const { useTheme } = require('@material-ui/core/styles');
 const { default: useUpdate } = require('react-use/lib/useUpdate');
 const { default: useInterval } = require('react-use/lib/useInterval');
 const ReactCountdownClock = require('react-countdown-clock');
+const { useAppTime } = require('../containers/useAppTime');
 
-module.exports = function ClockCountdown({ now, start, end, onEnd, ...others }) {
+module.exports = function ClockCountdown({ start, end, onEnd, ...others }) {
 
-    const getNow = () => now || new Date();
+    const getTime = useAppTime();
 
     const computeSeconds = () => {
 
-        const ms = Number(end) - Math.max(Number(getNow()), Number(start));
+        const ms = Number(end) - Math.max(getTime(), Number(start));
 
         return Math.max(0, ms / 1000);
     };
@@ -20,7 +21,7 @@ module.exports = function ClockCountdown({ now, start, end, onEnd, ...others }) 
     const theme = useTheme();
     const update = useUpdate();
     const [seconds, setSeconds] = useState(computeSeconds);
-    const started = getNow() >= start;
+    const started = getTime() >= start;
 
     useInterval(update, [started ? null : 10]);
 
@@ -33,7 +34,7 @@ module.exports = function ClockCountdown({ now, start, end, onEnd, ...others }) 
         <ReactCountdownClock
             key={seconds}
             seconds={seconds}
-            paused={!started}
+            paused={!started || seconds === 0}
             font={theme.typography.fontFamily}
             onComplete={onEnd}
             {...others}
@@ -42,7 +43,6 @@ module.exports = function ClockCountdown({ now, start, end, onEnd, ...others }) 
 };
 
 module.exports.propTypes = {
-    now: T.instanceOf(Date),
     end: T.instanceOf(Date).isRequired,
     start: T.instanceOf(Date).isRequired,
     onEnd: T.func

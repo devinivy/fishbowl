@@ -58,12 +58,11 @@ exports.timeout = async (ms, promise) => {
         setTimeout(() => reject(new TimeoutError(`Timed-out after ${ms}ms.`)), ms);
     });
 
-    // A lot of the time these will throw and be ignored
-    // due to intentional usage with Promise.race().
-    // TODO cancel before rejecting.
+    const result = await Promise.race([promise, timeout]);
+
     timeout.catch(() => null);
 
-    return await Promise.race([promise, timeout]);
+    return result;
 };
 
 exports.TimeoutError = class TimeoutError extends Error {};

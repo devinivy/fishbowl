@@ -15,11 +15,13 @@ const { default: Teal } = require('@material-ui/core/colors/teal');
 const { default: Orange } = require('@material-ui/core/colors/orange');
 const { default: FormatRelative } = require('date-fns/formatRelative');
 const Types = require('./types');
+const { useAppTime } = require('../containers/useAppTime');
 
 const internals = {};
 
-module.exports = function GameListItem({ game, now = new Date(), children, ...others }) {
+module.exports = function GameListItem({ game, now, children, ...others }) {
 
+    const getTime = useAppTime();
     const { status, createdAt, players } = game;
     const { StatusAvatar, statusInfo } = internals;
 
@@ -31,7 +33,7 @@ module.exports = function GameListItem({ game, now = new Date(), children, ...ot
                 </StatusAvatar>
             </ListItemAvatar>
             <ListItemText
-                primary={FormatRelative(createdAt, now).toLowerCase()}
+                primary={FormatRelative(createdAt, now || getTime()).toLowerCase()}
                 secondary={players.map((p, i) => (
 
                     <>

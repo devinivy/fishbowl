@@ -1,12 +1,15 @@
 const { useState, useEffect } = require('react');
 const { default: useInterval } = require('react-use/lib/useInterval');
 const T = require('prop-types');
+const { useAppTime } = require('../containers/useAppTime');
 
-module.exports = function SecondsCountdown({ now, ends, onEnd }) {
+module.exports = function SecondsCountdown({ ends, onEnd }) {
+
+    const getTime = useAppTime();
 
     const computeSeconds = () => {
 
-        const ms = Number(ends) - Number(now || new Date());
+        const ms = Number(ends) - getTime();
 
         return Math.max(0, Math.ceil(ms / 1000));
     };
@@ -33,7 +36,6 @@ module.exports = function SecondsCountdown({ now, ends, onEnd }) {
 };
 
 module.exports.propTypes = {
-    now: T.instanceOf(Date),
     ends: T.instanceOf(Date).isRequired,
     onEnd: T.func
 };

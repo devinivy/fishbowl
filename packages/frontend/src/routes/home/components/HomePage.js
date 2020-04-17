@@ -9,13 +9,15 @@ const { default: AddIcon } = require('@material-ui/icons/Add');
 const Link = require('../../../components/Link');
 const GameListItem = require('../../../components/GameListItem');
 const Types = require('../../../components/types');
+const { useAppTime } = require('../../../containers/useAppTime');
 
 const internals = {};
 
 module.exports = function HomePage({ games, onClickAdd, ...others }) {
 
+    const getTime = useAppTime();
     const { CornerFab } = internals;
-    const now = new Date();
+    const now = getTime();
 
     return (
         <Box
