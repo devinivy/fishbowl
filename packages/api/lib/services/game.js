@@ -1,5 +1,6 @@
 'use strict';
 
+const Boom = require('@hapi/boom');
 const Curry = require('curry');
 const Schmervice = require('schmervice');
 const { constant: O } = require('patchinko');
@@ -10,6 +11,7 @@ module.exports = Schmervice.withName('gameService', (server) => {
 
     const models = () => server.models();
     const services = () => server.services();
+    const emit = (...args) => server.events.emit(...args);
 
     server.event('game-updated');
 
@@ -26,7 +28,7 @@ module.exports = Schmervice.withName('gameService', (server) => {
                 .patchAndFetchById(gameId, mutate(game, opts) || game)
                 .throwIfNotFound();
 
-            server.events.emit('game-updated', updatedGame);
+            emit('game-updated', updatedGame);
 
             return updatedGame;
         });
@@ -76,11 +78,11 @@ module.exports = Schmervice.withName('gameService', (server) => {
             const { gameService: { hasPlayer } } = services();
 
             if (state.status !== 'initialized' && state.status !== 'in-progress') {
-                throw new Error();
+                throw Boom.conflict('You can only join a game that is initialized or in progress.');
             }
 
             if (state.status === 'in-progress' && !hasPlayer(game, nickname)) {
-                throw new Error();
+                throw Boom.conflict('You cannot newly join a game once it is already in progress.');
             }
 
             if (hasPlayer(game, nickname)) {
@@ -106,17 +108,17 @@ module.exports = Schmervice.withName('gameService', (server) => {
         playerReady: mutation(({ state }, { nickname, words }) => {
 
             if (state.status !== 'initialized') {
-                throw new Error();
+                throw Boom.conflict('A player can become ready only in an initialized game.');
             }
 
             const player = state.players[nickname];
 
             if (!player || player.status !== 'not-ready') {
-                throw new Error();
+                throw Boom.conflict('The player has not joined yet or is already ready.');
             }
 
             if (!words || !words.length) {
-                throw new Error();
+                throw Boom.conflict('The player must provide some words in order to become ready.');
             }
 
             O(state, {
@@ -129,14 +131,14 @@ module.exports = Schmervice.withName('gameService', (server) => {
         begin: mutation(({ state }, _) => {
 
             if (state.status !== 'initialized') {
-                throw new Error();
+                throw Boom.conflict('You can only begin a game that is initialized.');
             }
 
             const players = Object.values(state.players);
             const playerIsReady = ({ status }) => status === 'ready';
 
             if (players.length < 2 || !players.every(playerIsReady)) {
-                throw new Error();
+                throw Boom.conflict('Cannot begin the game because their aren\'t enough players or not every player is ready.');
             }
 
             const [firstPlayer] = state.playerOrder;
@@ -177,7 +179,7 @@ module.exports = Schmervice.withName('gameService', (server) => {
             if (!state.turn ||
                 state.turn.round === 0 ||
                 state.turn.status !== 'initialized') {
-                throw new Error();
+                throw Boom.conflict('You can only end a game in-between turns.');
             }
 
             O(state, {
@@ -190,7 +192,7 @@ module.exports = Schmervice.withName('gameService', (server) => {
             const { now = Date.now() } = opts || {};
 
             if (!state.turn || state.turn.status !== 'initialized') {
-                throw new Error();
+                throw Boom.conflict('You can only begin a turn that is initialized.');
             }
 
             const { chooseWord } = internals;
@@ -210,7 +212,7 @@ module.exports = Schmervice.withName('gameService', (server) => {
         endTurn: mutation(({ state }, _) => {
 
             if (!state.turn || state.turn.status !== 'in-progress') {
-                throw new Error();
+                throw Boom.conflict('You can only end a turn that is in progress.');
             }
 
             const { turn } = state;
@@ -243,7 +245,7 @@ module.exports = Schmervice.withName('gameService', (server) => {
         claimWord: mutation(({ state }, _) => {
 
             if (!state.turn || state.turn.status !== 'in-progress') {
-                throw new Error();
+                throw Boom.conflict('You can only claim a word when a turn is in progress.');
             }
 
             const { turn } = state;

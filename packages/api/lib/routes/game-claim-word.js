@@ -32,7 +32,7 @@ module.exports = {
                 const initial = await getById(id, txn);
 
                 if (currentPlayerTurn(initial) !== nickname) {
-                    throw Boom.forbidden();
+                    throw Boom.forbidden('Only the player whose turn it is may claim a word.');
                 }
 
                 return await claimWord(id, null, txn);

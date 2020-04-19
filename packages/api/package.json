@@ -21,6 +21,7 @@
     "@hapi/bounce": "2.x.x",
     "@hapi/joi": "17.x.x",
     "@hapi/nes": "12.x.x",
+    "avocat": "2.x.x",
     "curry": "1.x.x",
     "haute-couture": "3.x.x",
     "objection": "2.x.x",
