@@ -1,5 +1,6 @@
 {
   "name": "fishbowl-api",
+  "private": true,
   "version": "1.0.0",
   "description": "",
   "author": "Devin Ivy <devin@bigroomstudios.com>",
@@ -23,6 +24,7 @@
     "curry": "^1.2.0",
     "haute-couture": "3.x.x",
     "objection": "2.x.x",
+    "patchinko": "^4.2.0",
     "schmervice": "^1.5.0",
     "schwifty": "5.x.x",
     "shortid": "^2.2.15",

@@ -1,5 +1,6 @@
 {
-  "name": "strangeluv",
+  "name": "fishbowl-frontend",
+  "private": true,
   "version": "2.0.0",
   "main": "server/plugin.js",
   "engines": {
