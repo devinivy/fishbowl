@@ -9,7 +9,7 @@ module.exports = {
         validate: {
             payload: Joi.object({
                 nickname: Joi.string().required()
-            }),
+            })
         },
         handler: async (request) => {
 

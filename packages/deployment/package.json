@@ -21,7 +21,7 @@
     "confidence": "4.x.x",
     "fishbowl-api": "1.x.x",
     "fishbowl-frontend": "2.x.x",
-    "knex": "0.20.x",
+    "knex": "0.21.x",
     "objection": "2.x.x",
     "schwifty": "5.x.x",
     "sqlite3": "4.x.x",
