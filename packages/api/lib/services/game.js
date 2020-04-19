@@ -2,6 +2,7 @@
 
 const Curry = require('curry');
 const Schmervice = require('schmervice');
+const { constant: O } = require('patchinko');
 
 const internals = {};
 
@@ -90,9 +91,17 @@ module.exports = Schmervice.withName('gameService', (server) => {
             const mostRecentTeam = mostRecentPlayer ? state.players[mostRecentPlayer].team : 'b';
             const team = mostRecentTeam === 'a' ? 'b' : 'a';
 
-            state.players[nickname] = { nickname, team, status: 'not-ready' };
-            state.playerOrder.push(nickname);
-            state.score.player[nickname] = [];
+            O(state, {
+                players: O({
+                    [nickname]: { nickname, team, status: 'not-ready' }
+                }),
+                playerOrder: O((x) => [...x, nickname]),
+                score: O({
+                    player: O({
+                        [nickname]: []
+                    })
+                })
+            });
         }),
         playerReady: mutation(({ state }, { nickname, words }) => {
 
@@ -110,8 +119,12 @@ module.exports = Schmervice.withName('gameService', (server) => {
                 throw new Error();
             }
 
-            state.players[nickname] = { ...player, status: 'ready' };
-            state.words.push(...words);
+            O(state, {
+                players: O({
+                    [nickname]: O({ status: 'ready' })
+                }),
+                words: O((x) => [...x, ...words])
+            });
         }),
         begin: mutation(({ state }, _) => {
 
@@ -126,28 +139,37 @@ module.exports = Schmervice.withName('gameService', (server) => {
                 throw new Error();
             }
 
-            const [firstPlayerNickname] = state.playerOrder;
+            const [firstPlayer] = state.playerOrder;
 
-            state.status = 'in-progress';
+            O(state, {
+                status: 'in-progress',
+                turn: {
+                    status: 'initialized',
+                    round: 0,
+                    go: 0,
+                    roundWords: state.words,
+                    player: firstPlayer,
+                    lastPlayer: null,
+                    word: null,
+                    lastWord: null,
+                    start: null,
+                    end: null
+                },
+                score: O({
+                    team: O({
+                        a: O((x) => [...x, 0]),
+                        b: O((x) => [...x, 0])
+                    }),
+                    player: O((x) => {
 
-            state.turn = {
-                status: 'initialized',
-                round: 0,
-                go: 0,
-                roundWords: state.words,
-                player: firstPlayerNickname,
-                lastPlayer: null,
-                word: null,
-                lastWord: null,
-                start: null,
-                end: null
-            };
-
-            state.score.team.a.push(0);
-            state.score.team.b.push(0);
-            Object.entries(state.score.player).forEach(([nickname, scores]) => {
-
-                scores.push(nickname === firstPlayerNickname ? [0] : []);
+                        return O(x, ...Object.entries(x).map(([nickname, scores]) => ({
+                            [nickname]: [
+                                ...scores,
+                                nickname === firstPlayer ? [0] : []
+                            ]
+                        })));
+                    })
+                })
             });
         }),
         end: mutation(({ state }, _) => {
@@ -158,8 +180,10 @@ module.exports = Schmervice.withName('gameService', (server) => {
                 throw new Error();
             }
 
-            state.status = 'finished';
-            state.turn = null;
+            O(state, {
+                status: 'finished',
+                turn: null
+            });
         }),
         beginTurn: mutation(({ state }, opts) => {
 
@@ -172,15 +196,16 @@ module.exports = Schmervice.withName('gameService', (server) => {
             const { chooseWord } = internals;
             const { word, nextWords } = chooseWord(state.turn.roundWords);
 
-            state.turn = {
-                ...state.turn,
-                status: 'in-progress',
-                roundWords: nextWords,
-                word,
-                lastWord: state.turn.word,
-                start: new Date(now + 5000),
-                end: new Date(now + 5000 + 30000)
-            };
+            O(state, {
+                turn: O({
+                    status: 'in-progress',
+                    roundWords: nextWords,
+                    word,
+                    lastWord: state.turn.word,
+                    start: new Date(now + 5000),
+                    end: new Date(now + 5000 + 30000)
+                })
+            });
         }),
         endTurn: mutation(({ state }, _) => {
 
@@ -193,20 +218,27 @@ module.exports = Schmervice.withName('gameService', (server) => {
 
             const nextPlayer = getNextPlayer(turn.player, state.playerOrder);
 
-            state.turn = {
-                status: 'initialized',
-                round: turn.round,
-                go: turn.go + 1,
-                roundWords: [turn.word, ...turn.roundWords],
-                player: nextPlayer,
-                lastPlayer: turn.player,
-                word: null,
-                lastWord: turn.lastWord,
-                start: null,
-                end: null
-            };
-
-            state.score.player[nextPlayer][turn.round].push(0);
+            O(state, {
+                turn: {
+                    status: 'initialized',
+                    round: turn.round,
+                    go: turn.go + 1,
+                    roundWords: [turn.word, ...turn.roundWords],
+                    player: nextPlayer,
+                    lastPlayer: turn.player,
+                    word: null,
+                    lastWord: turn.lastWord,
+                    start: null,
+                    end: null
+                },
+                score: O({
+                    player: O({
+                        [nextPlayer]: O({
+                            [turn.round]: O((x) => [...x, 0])
+                        })
+                    })
+                })
+            });
         }),
         claimWord: mutation(({ state }, _) => {
 
@@ -225,35 +257,46 @@ module.exports = Schmervice.withName('gameService', (server) => {
             const { word, nextWords } = chooseWord(turn.roundWords);
 
             if (word !== null) {
-                state.turn = {
-                    ...turn,
-                    roundWords: nextWords,
-                    word,
-                    lastWord: turn.word,
-                };
+                O(state, {
+                    turn: O({
+                        roundWords: nextWords,
+                        word,
+                        lastWord: turn.word
+                    })
+                });
                 return;
             }
 
             const nextPlayer = getNextPlayer(turn.player, state.playerOrder);
 
-            state.turn = {
-                status: 'initialized',
-                round: turn.round + 1,
-                go: 0,
-                roundWords: state.words,
-                player: nextPlayer,
-                lastPlayer: turn.player,
-                word: null,
-                lastWord: turn.word,
-                start: null,
-                end: null
-            };
+            O(state, {
+                turn: {
+                    status: 'initialized',
+                    round: turn.round + 1,
+                    go: 0,
+                    roundWords: state.words,
+                    player: nextPlayer,
+                    lastPlayer: turn.player,
+                    word: null,
+                    lastWord: turn.word,
+                    start: null,
+                    end: null
+                },
+                score: O({
+                    team: O({
+                        a: O((x) => [...x, 0]),
+                        b: O((x) => [...x, 0])
+                    }),
+                    player: O((x) => {
 
-            state.score.team.a.push(0);
-            state.score.team.b.push(0);
-            Object.entries(state.score.player).forEach(([nickname, scores]) => {
-
-                scores.push(nickname === nextPlayer ? [0] : []);
+                        return O(x, ...Object.entries(x).map(([nickname, scores]) => ({
+                            [nickname]: [
+                                ...scores,
+                                nickname === nextPlayer ? [0] : []
+                            ]
+                        })));
+                    })
+                })
             });
         }),
         hasPlayer(game, nickname) {
