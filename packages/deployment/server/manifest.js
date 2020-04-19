@@ -7,7 +7,7 @@ const Schwifty = require('schwifty');
 // Glue manifest as a confidence store
 module.exports = new Confidence.Store({
     server: {
-        host: 'localhost',
+        host: '0.0.0.0',
         port: {
             $env: 'PORT',
             $coerce: 'number',
@@ -27,7 +27,10 @@ module.exports = new Confidence.Store({
     register: {
         plugins: [
             {
-                plugin: 'fishbowl-api'
+                plugin: 'fishbowl-api',
+                routes: {
+                    prefix: '/api'
+                }
             },
             {
                 plugin: 'fishbowl-frontend'
@@ -35,23 +38,19 @@ module.exports = new Confidence.Store({
             {
                 plugin: 'schwifty',
                 options: {
-                    $filter: 'NODE_ENV',
-                    $default: {},
-                    $base: {
-                        migrateOnStart: true,
-                        knex: {
-                            client: 'sqlite3',
-                            useNullAsDefault: true,     // Suggested for sqlite3
-                            connection: {
-                                filename: 'develop.db'
-                            },
-                            migrations: {
-                                stub: Schwifty.migrationsStubPath
+                    migrateOnStart: true,
+                    knex: {
+                        client: 'sqlite3',
+                        useNullAsDefault: true,     // Suggested for sqlite3
+                        connection: {
+                            filename: {
+                                $env: 'SQLITE_DB_FILE',
+                                $default: 'fishbowl.db'
                             }
+                        },
+                        migrations: {
+                            stub: Schwifty.migrationsStubPath
                         }
-                    },
-                    production: {
-                        migrateOnStart: false
                     }
                 }
             },
