@@ -1,6 +1,6 @@
 const { schema: { Entity }, ...Normalizr } = require('normalizr');
 const MiddleEnd = require('strange-middle-end');
-const Helpers = require('../helpers');
+const Helpers = require('./helpers');
 
 module.exports = (m) => {
 
