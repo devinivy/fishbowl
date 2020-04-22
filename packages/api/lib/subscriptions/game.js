@@ -1,10 +1,10 @@
 'use strict';
 
-module.exports = (server) => {
+module.exports = (app) => {
 
-    server.events.on('game-updated', (game) => {
+    app.events.on('game-updated', (game) => {
 
-        server.publish(`/games/${game.id}`, game);
+        app.publish(`/games/${game.id}`, game);
     });
 
     return {
@@ -13,7 +13,7 @@ module.exports = (server) => {
             auth: { mode: 'optional' },
             filter(_, game, { credentials, params: { id } }) {
 
-                const { gameService: { present } } = server.services();
+                const { gameService: { present } } = app.services();
                 const nickname = (credentials && credentials.gameId === id) ? credentials.nickname : null;
 
                 return {

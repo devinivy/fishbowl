@@ -7,13 +7,13 @@ const { constant: O } = require('patchinko');
 
 const internals = {};
 
-module.exports = Schmervice.withName('gameService', (server) => {
+module.exports = Schmervice.withName('gameService', (app) => {
 
-    const models = () => server.models();
-    const services = () => server.services();
-    const emit = (...args) => server.events.emit(...args);
+    const models = () => app.models();
+    const services = () => app.services();
+    const emit = (...args) => app.events.emit(...args);
 
-    server.event('game-updated');
+    app.event('game-updated');
 
     const mutation = (mutate) => {
 

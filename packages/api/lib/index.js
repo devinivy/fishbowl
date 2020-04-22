@@ -5,10 +5,10 @@ const Package = require('../package.json');
 
 exports.plugin = {
     pkg: Package,
-    register: async (server, options) => {
+    register: async (app, options) => {
 
         // Custom plugin code can go here
 
-        await HauteCouture.using()(server, options);
+        await HauteCouture.using()(app, options);
     }
 };

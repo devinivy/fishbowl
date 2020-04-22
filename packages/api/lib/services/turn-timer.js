@@ -4,12 +4,12 @@ const Bounce = require('@hapi/bounce');
 const Toys = require('toys');
 const Schmervice = require('schmervice');
 
-module.exports = Schmervice.withName('turnTimerService', (server) => {
+module.exports = Schmervice.withName('turnTimerService', (app) => {
 
-    const services = () => server.services();
-    const on = (...args) => server.events.on(...args);
-    const initialize = (...args) => server.ext(Toys.onPreStart(...args));
-    const teardown = (...args) => server.ext(Toys.onPostStop(...args));
+    const services = () => app.services();
+    const on = (...args) => app.events.on(...args);
+    const initialize = (...args) => app.ext(Toys.onPreStart(...args));
+    const teardown = (...args) => app.ext(Toys.onPostStop(...args));
 
     initialize(async () => {
 

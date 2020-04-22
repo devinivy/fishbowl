@@ -1,11 +1,11 @@
 'use strict';
 
-module.exports = (server) => ({
+module.exports = (app) => ({
     scheme: 'basic',
     options: {
         async validate(_, username, password) {
 
-            const { gameService: { getById, hasPlayer } } = server.services();
+            const { gameService: { getById, hasPlayer } } = app.services();
 
             const nickname = username;
             const gameId = password;
