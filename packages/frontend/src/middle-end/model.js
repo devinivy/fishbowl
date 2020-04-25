@@ -1,3 +1,4 @@
+const Immer = require('immer');
 const { schema: { Entity }, ...Normalizr } = require('normalizr');
 const MiddleEnd = require('strange-middle-end');
 const Helpers = require('./helpers');
@@ -44,10 +45,12 @@ module.exports = (m) => {
         })
     };
 
+    const entityReducer = MiddleEnd.createEntityReducer({ schema });
+
     return {
         initialize() {
 
-            Helpers.watch(m, m.selectors.app.connection, (connection, b) => {
+            Helpers.watch(m, m.selectors.app.connection, (connection) => {
 
                 if (connection === 'connected') {
 
@@ -295,6 +298,20 @@ module.exports = (m) => {
                 return result;
             }
         },
-        reducer: MiddleEnd.createEntityReducer({ schema })
+        reducer: (model, action) => {
+
+            return entityReducer(model, Immer.produce(action, (draft) => {
+
+                Object.entries(draft.payload?.entities?.games ?? {})
+                    .forEach(([id, incoming]) => {
+
+                        const current = m.selectors.model.gameById({ model }, id);
+
+                        if (current?.version > incoming.version) {
+                            delete draft.payload?.entities?.games?.[id];
+                        }
+                    });
+            }));
+        }
     };
 };

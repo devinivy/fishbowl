@@ -10,7 +10,11 @@ module.exports = class Game extends Schwifty.Model {
 
     static joiSchema = Joi.object({
         id: Joi.string().default(() => Shortid()),
-        createdAt: Joi.date().iso().default(() => new Date().toISOString()),
+        version: Joi.number().integer().min(0).required(),
+        createdAt: Joi.alternatives(
+            Joi.date().iso(),
+            Joi.date().timestamp()
+        ).default(() => new Date()),
         state: Joi.object().prefs({ presence: 'required' }).keys({
             status: Joi.allow('initialized', 'in-progress', 'finished'),
             words: Joi.array().items(Joi.string()),

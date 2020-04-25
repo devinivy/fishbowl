@@ -25,7 +25,10 @@ module.exports = Schmervice.withName('gameService', (app) => {
             const game = await gameService.getById(gameId, txn);
 
             const updatedGame = await Game.query(txn)
-                .patchAndFetchById(gameId, mutate(game, opts) || game)
+                .patchAndFetchById(gameId, {
+                    ...(mutate(game, opts) || game),
+                    version: Game.raw('version + 1')
+                })
                 .throwIfNotFound();
 
             emit('game-updated', updatedGame);
@@ -54,6 +57,7 @@ module.exports = Schmervice.withName('gameService', (app) => {
             const { Game } = models();
 
             const game = await Game.query(txn).insert({
+                version: 0,
                 state: {
                     status: 'initialized',
                     words: [],
@@ -317,12 +321,14 @@ module.exports = Schmervice.withName('gameService', (app) => {
 
             const {
                 id,
+                version,
                 createdAt,
                 state: { status, players, playerOrder, score, turn }
             } = game;
 
             return {
                 id,
+                version,
                 createdAt,
                 status,
                 me: players[nickname] || null,

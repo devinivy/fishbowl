@@ -28,7 +28,7 @@ module.exports = (m, { api }) => {
 
             const ts = Timesync.create({
                 peers: [client],
-                interval: 10000
+                interval: 20000
             });
 
             ts.send = async (peer, { id }, timeout) => {
