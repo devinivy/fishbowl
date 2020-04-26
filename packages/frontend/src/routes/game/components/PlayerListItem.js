@@ -16,8 +16,10 @@ module.exports = function PlayerListItem({ player, me, children, secondary, outl
     return (
         <ListItem {...others}>
             <ListItemAvatar>
-                {team === 'a' && <TeamAvatar.A outline={outlineAvatar}>A</TeamAvatar.A>}
-                {team === 'b' && <TeamAvatar.B outline={outlineAvatar}>B</TeamAvatar.B>}
+                <>
+                    {team === 'a' && <TeamAvatar.A outline={outlineAvatar}>A</TeamAvatar.A>}
+                    {team === 'b' && <TeamAvatar.B outline={outlineAvatar}>B</TeamAvatar.B>}
+                </>
             </ListItemAvatar>
             <ListItemText
                 primary={(

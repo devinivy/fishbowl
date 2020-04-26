@@ -36,16 +36,16 @@ module.exports = function GameListItem({ game, now, children, ...others }) {
                 primary={FormatRelative(createdAt, now || getTime()).toLowerCase()}
                 secondary={players.map((p, i) => (
 
-                    <>
+                    <React.Fragment key={p.nickname}>
                         <Box
                             component='span'
                             title={`${p.nickname}${(status === 'initialized') ? (p.status === 'ready' ? ': ready' : ': not ready') : ''}`}
-                            color={(status === 'initialized') && (p.status === 'ready' ? Teal[500] : Orange[500])}
+                            color={(status === 'initialized') ? (p.status === 'ready' ? Teal[500] : Orange[500]) : null}
                         >
                             {p.nickname}
                         </Box>
                         {i !== players.length - 1 ? ', ' : ''}
-                    </>
+                    </React.Fragment>
                 ))}
             />
             {children}
@@ -55,7 +55,7 @@ module.exports = function GameListItem({ game, now, children, ...others }) {
 
 module.exports.propTypes = {
     game: Types.game.isRequired,
-    now: T.instanceOf(Date).isRequired,
+    now: T.oneOfType([T.instanceOf(Date), T.number]),
     children: T.node
 };
 

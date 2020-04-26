@@ -98,12 +98,12 @@ module.exports = function ScoreSummary({ status, score, ...others }) {
             {completedRounds > 0 && (
                 <>
                     {tie && (
-                        <Typography>
+                        <Typography component='div'>
                             it's a tie, {winningScore} to {winningScore}
                         </Typography>
                     )}
                     {!tie && (
-                        <Typography>
+                        <Typography component='div'>
                             team
                             <Box component='span' mx={-.5}>
                                 <InlineAvatar as={WinningAvatar} />
