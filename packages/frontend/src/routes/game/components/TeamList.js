@@ -6,6 +6,7 @@ const { default: ListSubheader } = require('@material-ui/core/ListSubheader');
 const { default: Typography } = require('@material-ui/core/Typography');
 const { default: Divider } = require('@material-ui/core/Divider');
 const PlayerListItem = require('./PlayerListItem');
+const Types = require('../../../components/types');
 
 const internals = {};
 
@@ -48,14 +49,8 @@ module.exports = function TeamList({ players, me, ...others }) {
 };
 
 module.exports.propTypes = {
-    me: T.shape({
-        nickname: T.string.isRequired
-    }),
-    players: T.arrayOf(T.shape({
-        nickname: T.string.isRequired,
-        team: T.oneOf(['a', 'b']),
-        status: T.string.isRequired
-    }))
+    me: Types.player,
+    players: T.arrayOf(Types.player).isRequired
 };
 
 internals.onTeamA = ({ team }) => team === 'a';

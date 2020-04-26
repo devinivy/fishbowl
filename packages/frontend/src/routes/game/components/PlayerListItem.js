@@ -5,6 +5,7 @@ const { default: ListItem } = require('@material-ui/core/ListItem');
 const { default: ListItemText } = require('@material-ui/core/ListItemText');
 const { default: ListItemAvatar } = require('@material-ui/core/ListItemAvatar');
 const TeamAvatar = require('../../../components/TeamAvatar');
+const Types = require('../../../components/types');
 
 const internals = {};
 
@@ -33,14 +34,8 @@ module.exports = function PlayerListItem({ player, me, children, secondary, outl
 };
 
 module.exports.propTypes = {
-    me: T.shape({
-        nickname: T.string.isRequired,
-        team: T.oneOf(['a', 'b']).isRequired
-    }),
-    player: T.shape({
-        nickname: T.string.isRequired,
-        team: T.oneOf(['a', 'b']).isRequired
-    }).isRequired,
+    me: Types.player,
+    player: Types.player.isRequired,
     secondary: T.node,
     outlineAvatar: T.bool,
     children: T.node

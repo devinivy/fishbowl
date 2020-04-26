@@ -5,7 +5,7 @@ const { default: Styled } = require('styled-components');
 const { useTheme } = require('@material-ui/core/styles');
 const { default: useUpdate } = require('react-use/lib/useUpdate');
 const { default: useMediaQuery } = require('@material-ui/core/useMediaQuery');
-// const DifferenceInSeconds = require('date-fns/differenceInSeconds');
+const { Textfit } = require('react-textfit');
 const { default: Box } = require('@material-ui/core/Box');
 const { default: Typography } = require('@material-ui/core/Typography');
 const { default: ListItem } = require('@material-ui/core/ListItem');
@@ -17,14 +17,12 @@ const { default: Button } = require('@material-ui/core/Button');
 const { default: Grow } = require('@material-ui/core/Grow');
 const { default: CheckIcon } = require('@material-ui/icons/Check');
 const { default: StarsIcon } = require('@material-ui/icons/Stars');
-// const { default: Teal } = require('@material-ui/core/colors/teal');
-// const { default: Red } = require('@material-ui/core/colors/red');
 const PlayerListItem = require('./PlayerListItem');
 const ClockCountdown = require('../../../components/ClockCountdown');
 const SecondsCountdown = require('../../../components/SecondsCountdown');
 const { useFlasher } = require('../../../components/useFlasher');
-const { Textfit } = require('react-textfit');
 const { useAppTime } = require('../../../containers/useAppTime');
+const Types = require('../../../components/types');
 
 const internals = {};
 
@@ -205,18 +203,9 @@ module.exports = function TurnInfo({ turn, me, score, onClickReady, onClickGotWo
 };
 
 module.exports.propTypes = {
-    me: T.shape({
-        nickname: T.string.isRequired,
-        team: T.oneOf(['a', 'b']).isRequired
-    }),
-    score: T.shape({
-        team: T.shape({
-            a: T.arrayOf(T.number).isRequired,
-            b: T.arrayOf(T.number).isRequired
-        }).isRequired,
-        player: T.objectOf(T.arrayOf(T.number).isRequired).isRequired
-    }),
-    turn: T.object.isRequired,
+    me: Types.player,
+    score: Types.score.isRequired,
+    turn: Types.turn.isRequired,
     onClickReady: T.func,
     onClickGotWord: T.func
 };

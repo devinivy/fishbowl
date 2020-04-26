@@ -5,6 +5,7 @@ const { default: Badge } = require('@material-ui/core/Badge');
 const { default: Box } = require('@material-ui/core/Box');
 const { default: Typography } = require('@material-ui/core/Typography');
 const TeamAvatar = require('../../../components/TeamAvatar');
+const Types = require('../../../components/types');
 
 const internals = {};
 
@@ -121,13 +122,7 @@ module.exports = function ScoreSummary({ status, score, ...others }) {
 
 module.exports.propTypes = {
     status: T.oneOf(['in-progress', 'finished']).isRequired,
-    score: T.shape({
-        team: T.shape({
-            a: T.arrayOf(T.number).isRequired,
-            b: T.arrayOf(T.number).isRequired
-        }).isRequired,
-        player: T.objectOf(T.arrayOf(T.arrayOf(T.number)).isRequired).isRequired
-    })
+    score: Types.score.isRequired
 };
 
 internals.sum = (x, y) => x + y;

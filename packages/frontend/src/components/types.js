@@ -1,10 +1,43 @@
 const T = require('prop-types');
 
+exports.player = T.shape({
+    nickname: T.string.isRequired,
+    status: T.oneOf(['ready', 'not-ready']).isRequired,
+    team: T.oneOf(['a', 'b']).isRequired
+});
+
+exports.turn = T.shape({
+    status: T.oneOf(['initialized', 'in-progress']).isRequired,
+    word: T.string,
+    lastWord: T.string,
+    go: T.number.isRequired,
+    round: T.number.isRequired,
+    player: exports.player.isRequired,
+    lastPlayer: exports.player,
+    start: T.instanceOf(Date),
+    end: T.instanceOf(Date)
+});
+
+exports.score = T.shape({
+    team: T.shape({
+        a: T.arrayOf(T.number).isRequired,
+        b: T.arrayOf(T.number).isRequired
+    }).isRequired,
+    player: T.objectOf(
+        T.arrayOf(
+            T.arrayOf(T.number)
+        ).isRequired
+    ).isRequired
+});
+
 exports.game = T.shape({
-    id: T.number.isRequired,
+    id: T.oneOfType([T.string, T.number]).isRequired,
+    version: T.number.isRequired,
+    createdAt: T.instanceOf(Date),
     status: T.oneOf(['initialized', 'in-progress', 'finished']),
-    players: T.arrayOf(T.string).isRequired,
-    createdAt: T.instanceOf(Date)
+    players: T.arrayOf(exports.player).isRequired,
+    turn: exports.turn,
+    score: exports.score.isRequired
 });
 
 exports.game.examples = [
