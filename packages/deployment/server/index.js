@@ -1,6 +1,7 @@
 'use strict';
 
 const Glue = require('@hapi/glue');
+const Exiting = require('exiting');
 const Manifest = require('./manifest');
 
 exports.deployment = async (start) => {
@@ -14,7 +15,7 @@ exports.deployment = async (start) => {
         return server;
     }
 
-    await server.start();
+    await Exiting.createManager(server).start();
 
     console.log(`Server started at ${server.info.uri}`);
 
