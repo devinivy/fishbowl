@@ -26,7 +26,7 @@ When this package is consumed as a hapi plugin it requires no plugin options.
 
 ## Extras
 
-## Core Dependencies
+### Core Dependencies
 
  - *UI* - `react` `react-dom`
  - *Styles & Design* - `styled-components` `@material-ui/core` `@material-ui/styles`
@@ -40,7 +40,7 @@ When this package is consumed as a hapi plugin it requires no plugin options.
  - *Tests* - `jest` `@testing-library/react`
  - *Lint* - `eslint` `@hapi/eslint-config-hapi` `eslint-config-standard-react`
 
-## Scripts
+### Scripts
 
 |`npm run <script>`|Description|
 |------------------|-----------|
