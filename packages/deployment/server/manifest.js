@@ -45,7 +45,7 @@ module.exports = new Confidence.Store({
                         connection: {
                             filename: {
                                 $env: 'SQLITE_DB_FILE',
-                                $default: 'fishbowl.db'
+                                $default: ':memory:'
                             }
                         },
                         migrations: {
