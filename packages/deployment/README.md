@@ -1,5 +1,5 @@
 # fishbowl-deployment
-> The REST and realtime backend powering fishbowl
+> The unified deployment of [API](../api) and [frontend](../frontend) powering fishbowl
 
 ## What is this?
 This is a [hapijs](https://hapi.dev/) service composing both [fishbowl-frontend](../frontend) and [fishbowl-api](../api) into a single server. Each of fishbowl-frontend and fishbowl-api followed the principle of [server-plugin separation](https://hapipal.com/best-practices/server-plugin-separation) with support from the [hapi pal boilerplate](https://github.com/hapipal/boilerplate), so we have the choice to deploy them together or separately.  The purpose of fishbowl-deployment is create a simple deployment, specifically for Docker containerization.
