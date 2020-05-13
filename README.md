@@ -1,5 +1,5 @@
 # fishbowl
-> A realtime game built with [React](https://reactjs.org/) and [hapijs](https://hapi.dev/)
+> A realtime game built with [React](https://reactjs.org/) and [hapijs](https://hapi.dev/) 🐟
 
 Fishbowl is a turn-based word game typically played in-person.  This application adapts the in-person [gameplay](#for-gameplay) so that we can instead play remotely while we are quarantined at home!  It also is meant to serve as a fairly in-depth example of an application built with React and especially with [hapi pal](https://hapipal.com/).
 
@@ -21,16 +21,16 @@ npx lerna run start --stream --scope fishbowl-deployment
 ```
 
 ## For Production
-Utilizing the [Dockerfile](./Dockerfile) in the root of this project is the recommended solution for deploying Fishbowl in a consistent, reproducible way.  This Dockerfile will build the frontend and ensure the frontend and backend are configured correctly together. You will need to [provide a volume](https://docs.docker.com/storage/volumes/) if you would like persistent storage for SQLite.  The volume needs to be able to read and write to `/date/app.db` within the container.
+Utilizing the [Dockerfile](./Dockerfile) in the root of this project is the recommended solution for deploying Fishbowl in a consistent, reproducible way.  This Dockerfile will build the frontend and ensure the frontend and backend are configured correctly together within [fishbowl-deployment](./packages/deployment). You will need to [provide a volume](https://docs.docker.com/storage/volumes/) if you would like persistent storage for SQLite.  The volume needs to be able to read and write to `/date/app.db` within the container.  The container will expose the application on port 3000.
 
 ```sh
 docker build -t fishbowl .
 touch fishbowl.db # Persistent storage
-docker run --volume $PWD/fishbowl.db:/app/data.db fishbowl
+docker run --volume $PWD/fishbowl.db:/app/data.db -p 3000:3000 fishbowl
 ```
 
 ## For Gameplay
-At the time of writing the rules gameplay is not written down in this repository, but [this video](https://www.youtube.com/watch?v=QO-2s4CEd1w) is a good explainer.
+At the time of writing the rules and gameplay are not written down in this repository, but [this video](https://www.youtube.com/watch?v=QO-2s4CEd1w) is a good explainer.
 
 The only requisites aside from the Fishbowl web application are:
   - that each player have their own screen, and

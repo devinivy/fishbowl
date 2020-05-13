@@ -19,4 +19,4 @@ For production it is recommended to deploy this service using the [Dockerfile](.
 ### Configuration
 This service persists data in an in-memory SQLite database by default.  If you would like to persist data to disk you may provide an environment variable `SQLITE_DB_FILE`.
 
-When deploying using the Dockerfile at the root of the project, you will need to [provide a volume](https://docs.docker.com/storage/volumes/) if you would like persistent storage for SQLite.  The volume needs to be able to read and write to `/date/app.db` within the container.
+When deploying using the Dockerfile at the root of the project, you will need to [provide a volume](https://docs.docker.com/storage/volumes/) if you would like persistent storage for SQLite.  The volume needs to be able to read and write to `/date/app.db` within the container.  The container will expose the application on port 3000.
