@@ -4,19 +4,19 @@
 ## What is this?
 This is a [hapijs](https://hapi.dev/) API web server built using [hapi pal](https://hapipal.com/) to power the fishbowl application.  It supports websockets for realtime functionality in addition to plain HTTP.  The websocket support is made possible by hapi's [nes](https://hapi.dev/module/nes/) plugin.  All game data is persisted to SQLite via [Objection ORM](https://vincit.github.io/objection.js/).
 
-This service may be deployed standalone or treated as a package and pulled-in as a dependency.  When it's used as a dependency, it takes the form of a hapi plugin and may be registered on any existing hapi deployment.  This is exactly how `fishbowl-deployment` makes use of this service, deploying both the fishbowl frontend and backend together on a single server.
+This service may be deployed standalone or treated as a package and pulled-in as a dependency.  When it's used as a dependency, it takes the form of a hapi plugin and may be registered on any existing hapi deployment.  This is exactly how [fishbowl-deployment](../deployment) makes use of this service, deploying both the fishbowl frontend and backend together on a single server.
 
 ## Getting Started
 ### Installation
 This service is best installed by running `lerna bootstrap` from the project root.
 
 ### Requirements
-When deployed standalone, this service only requires it be run on node v12.  When this package is used as a dependency, the following packages need to be installed in the project as peers: hapi v19, knex v0.21, objection v2, schwifty v5, sqlite3 v4.  With the exception of hapi, these packages are responsible for providing access to the SQLite database.
+When deployed standalone, this service only requires it be run on node v12+.  When this package is used as a dependency, the following packages need to be installed in the project as peers: hapi v19, knex v0.21, objection v2, schwifty v5, sqlite3 v4.  With the exception of hapi, these packages are responsible for providing access to the SQLite database.
 
 ### Deployment
-Once installed you may start the server by running `npm start` within this directory or `lerna run start --stream --scope fishbowl-api` from the project root.  Note that the fishbowl application has its own deployment in the `fishbowl-deployment` package, which includes this API service: the instructions above are just for standalone deployments or for development purposes.
+Once installed you may start the server by running `npm start` within this directory or `lerna run start --stream --scope fishbowl-api` from the project root.  Note that the fishbowl application has its own deployment in the [fishbowl-deployment](../deployment) package, which includes this API service: the instructions above are just for standalone deployments or for development purposes.
 
-When this package is used as a dependency (as it is in `fishbowl-deployment`), the API service is consumed as a hapi plugin.
+When this package is used as a dependency (as it is in fishbowl-deployment), the API service is consumed as a hapi plugin.
 
 ### Configuration
 This service persists data in an in-memory SQLite database by default.  If you would like to persist data to disk you may provide an environment variable `SQLITE_DB_FILE`.  If you would like to use a .env file for configuration, `cp server/.env-keep server/.env` and fill-in whatever environment variables that you'd like.  The entrypoint to configuration lives in `server/manifest.js`.

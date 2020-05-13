@@ -9,7 +9,7 @@ This is a [hapijs](https://hapi.dev/) service composing both [fishbowl-frontend]
 This service is best installed by running `lerna bootstrap` from the project root.
 
 ### Requirements
-This service only requires it be run on node v12.  The fishbowl-frontend project should already be built with `API_URL=/api` (i.e. `API_URL=/api lerna run build --scope fishbowl-frontend`).
+This service only requires it be run on node v12+.  The fishbowl-frontend project should already be built with `API_URL=/api` (i.e. `API_URL=/api lerna run build --scope fishbowl-frontend`).
 
 ### Deployment
 Once installed you may start the server by running `npm start` within this directory or `lerna run start --stream --scope fishbowl-deployment` from the project root.
