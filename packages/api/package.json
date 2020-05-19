@@ -43,6 +43,7 @@
     "@hapi/hapi": "19.x.x",
     "@hapi/hoek": "9.x.x",
     "@hapi/lab": "22.x.x",
+    "ahem": "^1.1.0",
     "babel-eslint": "10.x.x",
     "confidence": "4.x.x",
     "dotenv": "8.x.x",
