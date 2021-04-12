@@ -1,8 +1,8 @@
 'use strict';
 
 const Bounce = require('@hapi/bounce');
-const Toys = require('toys');
-const Schmervice = require('schmervice');
+const Toys = require('@hapipal/toys');
+const Schmervice = require('@hapipal/schmervice');
 
 module.exports = Schmervice.withName('turnTimerService', (app) => {
 

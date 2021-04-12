@@ -11,7 +11,7 @@ This service may be deployed standalone or treated as a package and pulled-in as
 This service is best installed by running `lerna bootstrap` from the project root.
 
 ### Requirements
-When deployed standalone, this service only requires it be run on node v12+.  When this package is used as a dependency, the following packages need to be installed in the project as peers: hapi v19, knex v0.21, objection v2, schwifty v5, sqlite3 v4.  With the exception of hapi, these packages are responsible for providing access to the SQLite database.
+When deployed standalone, this service only requires it be run on node v12+.  When this package is used as a dependency, the following packages need to be installed in the project as peers: hapi v20, knex v0.21, objection v2, schwifty v6, sqlite3 v5.  With the exception of hapi, these packages are responsible for providing access to the SQLite database.
 
 ### Deployment
 Once installed you may start the server by running `npm start` within this directory or `lerna run start --stream --scope fishbowl-api` from the project root.  Note that the fishbowl application has its own deployment in the [fishbowl-deployment](../deployment) package, which includes this API service: the instructions above are just for standalone deployments or for development purposes.

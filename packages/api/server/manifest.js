@@ -1,9 +1,9 @@
 'use strict';
 
 const Dotenv = require('dotenv');
-const Confidence = require('confidence');
-const Toys = require('toys');
-const Schwifty = require('schwifty');
+const Confidence = require('@hapipal/confidence');
+const Schwifty = require('@hapipal/schwifty');
+const Toys = require('@hapipal/toys');
 
 // Pull .env into process.env
 Dotenv.config({ path: `${__dirname}/.env` });
@@ -13,12 +13,12 @@ module.exports = new Confidence.Store({
     server: {
         host: 'localhost',
         port: {
-            $env: 'PORT',
+            $param: 'PORT',
             $coerce: 'number',
             $default: 3000
         },
         debug: {
-            $filter: { $env: 'NODE_ENV' },
+            $filter: 'NODE_ENV',
             $default: {
                 log: ['error'],
                 request: ['error']
@@ -35,7 +35,7 @@ module.exports = new Confidence.Store({
                 options: {}
             },
             {
-                plugin: 'schwifty',
+                plugin: '@hapipal/schwifty',
                 options: {
                     $filter: 'NODE_ENV',
                     $default: {},
@@ -46,7 +46,7 @@ module.exports = new Confidence.Store({
                             useNullAsDefault: true,     // Suggested for sqlite3
                             connection: {
                                 filename: {
-                                    $env: 'SQLITE_DB_FILE',
+                                    $param: 'SQLITE_DB_FILE',
                                     $default: ':memory:'
                                 }
                             },
@@ -62,8 +62,8 @@ module.exports = new Confidence.Store({
             },
             {
                 plugin: {
-                    $filter: { $env: 'NODE_ENV' },
-                    $default: 'hpal-debug',
+                    $filter: 'NODE_ENV',
+                    $default: '@hapipal/hpal-debug',
                     production: Toys.noop
                 }
             }

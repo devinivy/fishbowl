@@ -1,8 +1,8 @@
 'use strict';
 
 const Boom = require('@hapi/boom');
+const Schmervice = require('@hapipal/schmervice');
 const Curry = require('curry');
-const Schmervice = require('schmervice');
 const { constant: O } = require('patchinko');
 
 const internals = {};

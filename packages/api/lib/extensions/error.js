@@ -1,7 +1,7 @@
 'use strict';
 
-const Toys = require('toys');
-const Avocat = require('avocat');
+const Toys = require('@hapipal/toys');
+const Avocat = require('@hapipal/avocat');
 
 module.exports = Toys.onPreResponse((request, h) => {
 

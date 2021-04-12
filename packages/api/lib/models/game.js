@@ -1,6 +1,6 @@
 'use strict';
 
-const Schwifty = require('schwifty');
+const Schwifty = require('@hapipal/schwifty');
 const Joi = require('joi');
 const Shortid = require('shortid');
 
